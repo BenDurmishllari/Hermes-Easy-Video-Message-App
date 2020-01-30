@@ -3,19 +3,26 @@
     padding: 0;
     margin: 0;
 }
-html {
+/* html {
     background-color: #56baed;
-}
+} */
   
 body {
     margin: 0px;
     padding: 0px;
     font-family: "Poppins", sans-serif;
-    height: 100vh;
-}
+    /* height:100vh default */
+    height: 90vh;
 
+    background: #fafafa;
+    color: #333333;
+    margin-top: 5rem;
+   
+}
+/* Log in page ^^ include font & height */
 a {
-    color: #92badd;
+    /* default #92badd, forgotPass text */
+    color: #000000;
     display:inline-block;
     text-decoration: none;
     font-weight: 400;
@@ -32,7 +39,7 @@ h2 {
 }
   
   
-  
+
 /* STRUCTURE */
   
 .wrapper {
@@ -43,6 +50,7 @@ h2 {
     width: 100%;
     min-height: 100%;
     padding: 20px;
+    
 }
   
 #formContent {
@@ -52,12 +60,12 @@ h2 {
     padding: 30px;
     width: 90%;
     /* max-width:450px default */
-    max-width: 550px;
+    max-width: 750px;
     position: relative;
     padding: 0px;
     -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
     box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-    text-align: center;
+    text-align: center; 
 }
   
 #formFooter {
@@ -87,7 +95,8 @@ h2.active {
 /* FORM TYPOGRAPHY*/
   
 input[type=button], input[type=submit], input[type=reset]  {
-    background-color: #56baed;
+    /* default color #56baed, logIn button */
+    background-color: #DC3232;
     border: none;
     color: white;
     padding: 15px 80px;
@@ -143,7 +152,8 @@ input[type=text] {
   
 input[type=text]:focus {
     background-color: #fff;
-    border-bottom: 2px solid #5fbae9;
+    /* default 5fbae9, underline txtBoxes */
+    border-bottom: 2px solid #DC3232;
 }
   
 input[type=text]:placeholder {
@@ -241,13 +251,15 @@ input[type=text]:placeholder {
     bottom: -10px;
     width: 0;
     height: 2px;
-    background-color: #56baed;
+    /* default #56baed, forgotPass underline */
+    background-color: #DC3232;
     content: "";
     transition: width 0.2s;
 }
   
 .underlineHover:hover {
-    color: #0d0d0d;
+    /* default #0d0d0d, curson touch change colour text forgotPass  */
+    color: #FDCD02;
 }
   
 .underlineHover:hover:after{
@@ -265,4 +277,105 @@ input[type=text]:placeholder {
 #icon {
     width:60%;
 }
+/* end log in page */
+
+
+/*  index basic parts that will 
+inherit all the other layouts  */
+
+h1, h2, h3, h4, h5, h6 {
+    color: #444444;
+}
+
+/*  nav bar background color */
+.bg-steel {
+    background-color: #DC3232;
+}
+
+/* nav bar text color */
+.site-header .navbar-nav .nav-link {
+    color: #FDCD02;
+}
+
+/*  nav bar text color when curson touch */
+.site-header .navbar-nav .nav-link:hover {
+    color: #ffffff;
+}
   
+.site-header .navbar-nav .nav-link.active {
+    font-weight: 500;
+}
+
+/*  at the moment no need as we haven't define 
+ the content for the boxes etc that will use */
+/* .content-section {
+    background: #ffffff;
+    padding: 10px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    margin-bottom: 20px;
+} */
+  
+/* .article-title {
+    color: #444444;
+} */
+  
+/* a.article-title:hover {
+    color: #428bca;
+    text-decoration: none;
+} */
+  
+/* .article-content {
+    white-space: pre-line;
+} */
+  
+/* .article-img {
+    height: 65px;
+    width: 65px;
+    margin-right: 16px;
+}
+  
+.article-metadata {
+    padding-bottom: 1px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #e3e3e3
+}
+  
+.article-metadata a:hover {
+    color: #333;
+    text-decoration: none;
+}
+  
+.article-svg {
+    width: 25px;
+    height: 25px;
+    vertical-align: middle;
+}
+  
+.account-img {
+    height: 125px;
+    width: 125px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+}
+  
+.account-heading {
+    font-size: 2.5rem;
+} */
+
+#colLeft {
+    
+    background-color: #0d0d0d;
+}
+
+#colCenter {
+
+    background-color: #39ace7;
+}
+
+#colRight {
+
+    background-color: black;
+}
+
+/*  end of index layout */
