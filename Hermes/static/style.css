@@ -118,6 +118,7 @@ input[type=button], input[type=submit], input[type=reset]  {
 }
   
 input[type=button]:hover, input[type=submit]:hover, input[type=reset]:hover  {
+    /* default #39ace7, when cursor touch logIn btn */
     background-color: #39ace7;
 }
   
@@ -252,14 +253,14 @@ input[type=text]:placeholder {
     width: 0;
     height: 2px;
     /* default #56baed, forgotPass underline */
-    background-color: #DC3232;
+    background-color: #FDCD02;
     content: "";
     transition: width 0.2s;
 }
   
 .underlineHover:hover {
     /* default #0d0d0d, curson touch change colour text forgotPass  */
-    color: #FDCD02;
+    color: #DC3232;
 }
   
 .underlineHover:hover:after{
@@ -368,10 +369,10 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #0d0d0d;
 }
 
-#colCenter {
+/* #colCenter {
 
     background-color: #39ace7;
-}
+} */
 
 #colRight {
 
@@ -379,3 +380,40 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*  end of index layout */
+
+
+/* button with badges home page */
+
+
+
+/* badge */
+.counter.counter-lg {
+    top: -24px !important;
+}
+.counter.counter-lg {
+    top: -27px;
+}
+
+.counter {
+    position: relative;
+    top: -23px;
+    left: auto;
+    z-index: 2;
+    padding: 9px 9px;
+    margin-left: -23px;
+    font-size: 21px;
+    color: #fff;
+    background-color: #fe1212;
+    border-radius: 10em;
+-webkit-box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+box-shadow: 0 2px 5px 0
+rgba(0,0,0,0.16),0 2px 10px 0
+    rgba(0,0,0,0.12);
+}
+/* end badges */
+/* end  */
+
+
+
+  
+  

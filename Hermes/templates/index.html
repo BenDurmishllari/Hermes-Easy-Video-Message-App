@@ -19,7 +19,7 @@
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="/">Hermes</a>
+          <!-- <a class="navbar-brand mr-4" href="/">Hermes</a> -->
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -30,8 +30,8 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              <a class="nav-item nav-link" href="/login">Login</a>
-              <a class="nav-item nav-link" href="/register">Register</a>
+              <!-- <a class="nav-item nav-link" href="/login">Login</a>
+              <a class="nav-item nav-link" href="/register">Register</a> -->
             </div>
           </div>
         </div>
@@ -39,15 +39,15 @@
     </header>
     <main role="main" class="container">
       <div class="row">
-        <!-- <div class="col-md-auto">
-          {% block content %}{% endblock %}
-        </div> -->
         <div id="colLeft" class="col">
           1 of 3
         </div>
-        <div id="colCenter" class="col-11">
-          2 of 3 (wider)
-        </div>
+          <div id="colCenter" class="col-11">
+            2 of 3 (wider)
+            {% block content %}
+            
+            {% endblock %}
+          </div>
         <div id="colRight" class="col">
           3 of 3
         </div>
