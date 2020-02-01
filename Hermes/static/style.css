@@ -369,10 +369,11 @@ h1, h2, h3, h4, h5, h6 {
     background-color: #0d0d0d;
 }
 
-/* #colCenter {
+#colCenter {
 
-    background-color: #39ace7;
-} */
+    background-color: #c76969;
+    
+}
 
 #colRight {
 
@@ -412,6 +413,26 @@ rgba(0,0,0,0.16),0 2px 10px 0
 }
 /* end badges */
 /* end  */
+
+/* home page buttons */
+
+#btnInbox
+{
+    height: 90px;
+    width: 90%;
+    margin-left: 5%;
+}
+
+#btnSendVideo
+{
+    height: 90px;
+    width: 90%;
+    margin-left: 5%;
+    
+}
+/* home page buttons end */
+
+
 
 
 
