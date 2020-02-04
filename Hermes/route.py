@@ -6,6 +6,6 @@ def loginPage():
     return render_template('homePage.html')
 
 
-@app.route('/sendVideo')
+@app.route('/sendVideo', methods = ['GET', 'POST'])
 def sendVideoPage():
     return render_template('sendVideoPage.html')
