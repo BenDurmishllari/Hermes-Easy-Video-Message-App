@@ -492,5 +492,10 @@ rgba(0,0,0,0.16),0 2px 10px 0
  
 
 
-  
+#timer{
+    background-color:#419D78;
+    color:#EFD0CA;
+    font-size:20px;
+    text-align:center;
+  }
   

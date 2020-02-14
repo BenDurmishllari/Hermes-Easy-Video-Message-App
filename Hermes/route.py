@@ -1,7 +1,9 @@
 from Hermes import app, UPLOAD_FOLDER
 from flask import render_template, request, Response
+from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
+
 
 
 
@@ -18,7 +20,7 @@ import os
 
 
 
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/')
 def loginPage():
 
     
@@ -28,14 +30,16 @@ def loginPage():
 
 
 
-@app.route('/audiovideo',methods=['GET', 'POST'])
+@app.route('/audiovideo',methods=['POST'])
 def audiovideo():
+	
 	if request.method == 'POST':
-		file = request.files['audiovideo']
+		file = request.files.get('audiovideo')
 		filename = "myaudiovideo.webm"
 		filename = secure_filename(filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 	return "success"
+
 
 
 
