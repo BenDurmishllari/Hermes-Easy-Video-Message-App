@@ -36,4 +36,4 @@ class User:
 
     
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.role}','{self.userId}')"
+        return f"User('{self.__username}','{self.__email}', '{self.__userId}','{self.__role}'')"

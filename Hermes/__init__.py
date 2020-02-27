@@ -14,15 +14,21 @@ CORS(app)
 
 # Config for the firebase
 config = {
-   ..keys..
+    ..keys..
 
 }
 
 firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 db = firebase.database()
-collectionReference = db.child("Users").child("Morty")
+collectionReference = db.child("Users")
 storage = firebase.storage()
+
+# path_on_cloud = "videos"
+# path_on_local = "./Hermes/static/uploadVideos/myaudiovideo.mp4"
+# storage.child(path_on_cloud).put(path_on_local)
+# vide_url = storage.child(path_on_cloud).get_url()
+
 
 # email = input('email\n')
 # password = input('pass\n')
