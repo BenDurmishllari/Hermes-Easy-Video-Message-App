@@ -14,19 +14,23 @@ CORS(app)
 
 # Config for the firebase
 config = {
-    ...project Keys etc...
+   ..keys..
+
 }
 
 firebase = pyrebase.initialize_app(config)
-
 auth = firebase.auth()
+db = firebase.database()
+collectionReference = db.child("Users").child("Morty")
+storage = firebase.storage()
 
-email = input('email\n')
-password = input('pass\n')
+# email = input('email\n')
+# password = input('pass\n')
 
-user = auth.create_user_with_email_and_password(email, password)
+# user = auth.create_user_with_email_and_password(email, password)
 
-auth.get_account_info(user['idToken'])
+# auth.get_account_info(user['idToken'])
+# print(auth.get_account_info(user['idToken']))
 
 # db = firebase.database()
 

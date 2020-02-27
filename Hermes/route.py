@@ -1,5 +1,6 @@
-from Hermes import app, UPLOAD_FOLDER
-from flask import render_template, request, Response, redirect
+from Hermes import app, firebase, auth, db, storage, collectionReference,UPLOAD_FOLDER
+from flask import render_template, request, Response, redirect, url_for
+from Hermes.models import User
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
@@ -10,7 +11,7 @@ def login():
 	
     return render_template('loginPage.html')
 
-@app.route('/homePage')
+@app.route('/homePage', methods = ['GET', 'POST'])
 def home():
 	
     return render_template('homePage.html')
@@ -28,7 +29,7 @@ def watchVideo():
 
 
 
-@app.route('/recordVideo',methods=['POST'])
+@app.route('/recordVideo',methods = ['POST'])
 def audiovideo():
 	
 	if request.method == 'POST':
@@ -40,4 +41,20 @@ def audiovideo():
 
 
 
+@app.route('/createAccount', methods = ['GET', 'POST'])
+def createAccount():
+	currentUser = auth
+	if request.method == 'POST':
+		
+		
+		try:
+			email = request.form['CreateAccountFormEmail']
+			password = request.form['CreateAccountFormPassword']
+			user = auth.create_user_with_email_and_password(email, password)
+			data = {"name": "Mortimer 'Morty' Smith"}
+			results = db.child("users").push(data, user['idToken'])
+			return redirect(url_for('home'))
+		except:
+			print("Malakia")
+	return render_template('createAccountPage.html')
 

@@ -1,0 +1,70 @@
+{% extends "index.html" %}  
+{% block content %}
+
+
+<div class="content-section">
+    <form method="POST" action="" name="CreateAccount">
+        
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Create Account</legend>
+            <div class="form-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                           
+                            <label class="form-control-label">User Name</label>
+                           
+                            <input class="form-control" name="CreateAccountFormUserName">
+                        </div>
+                        <div class="form-group">
+                            
+                            <label class="form-control-label">E-mail</label>
+                            
+                            <input class="form-control" name="CreateAccountFormEmail">
+                            
+                        </div>
+                        <div class="form-group">
+                            <input class="btn btn-outline-info" name="submit" type="submit" value="Sign Up">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            
+                            <label class="form-control-label">Password</label>
+                            
+                            <input class="form-control" name="CreateAccountFormPassword" type="Password" >
+                        </div>
+                        <div class="form-group">
+                            
+                            <label class="form-control-label">Role</label>
+                            
+                            <select class="form-control" name="CreateAccountFormRole">
+                                <option style="display:none"> -- Select User Role -- </option>
+                                <option value="Admin">Admin</option>
+                                <option value="User">User</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <!-- <label for="picture">Select Profile Picture</label>
+                            <input class="form-control-file" name="userProfilePic" type="file"> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+       
+    </form>
+</div>
+
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+

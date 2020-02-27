@@ -508,4 +508,40 @@ rgba(0,0,0,0.16),0 2px 10px 0
     font-size:20px;
     text-align:center;
   } */
+
+/*register form*/
+.content-section
+{
+  width: 60%;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.form-content 
+{
+  padding: 3%;
+  border: 2px solid #ced4da;
+  margin-bottom: 2%;
+  border-radius:1.5rem;
   
+}
+.form-control{
+    border-radius: 0.5rem;
+}
+.form-group
+{
+  border-radius: 0.5rem;
+  padding: 1%;
+}
+.btnSubmit
+{
+    border:none;
+    border-radius:1.5rem;
+    padding: 1%;
+    width: 20%;
+    cursor: pointer;
+    background: #0062cc;
+    color: #fff;
+    
+}
+/*register form*/
