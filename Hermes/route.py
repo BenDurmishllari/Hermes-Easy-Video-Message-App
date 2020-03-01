@@ -1,16 +1,34 @@
-from Hermes import app, firebase, auth, db, storage, collectionReference,UPLOAD_FOLDER
+from Hermes import app, firebase, auth, db, storage,UPLOAD_FOLDER
 from flask import render_template, request, Response, redirect, url_for, session
+from flask_login import login_user, logout_user, login_required, current_user
 from Hermes.models import User
-#from flask_login import login_user, logout_user, login_required, current_user
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from functools import wraps
 import os
+import json
 
+
+# decorator to protect routes
+# and verify that the user is
+# register on the system and 
+# it login normally
+def isAuthenticated(s):
+	@wraps(s)
+	def decorated_function(*args, **kwargs):
+		
+		#check userId
+		if not auth.current_user != None:
+			return redirect(url_for('login'))
+		return s(*args, **kwargs)
+	return decorated_function
+
+ 
+    
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-
 
 	message = ""
 	if request.method == "POST":
@@ -20,96 +38,59 @@ def login():
 		password = request.form["LogInFormPassword"]
 		
 		loginUser = auth.sign_in_with_email_and_password(email, password)
-		#print(auth.current_user)
-		#print("------------------")
-		#user_id = loginUser['idToken']
-		#print(loginUser)
-		#docRef = collectionReference.get()
 		
-		#print(docRef)
-		# if docRef != None:
-		# 	for dc in docRef.each():
-		# 		user = User(username = dc.val().get('Username'), email = dc.val().get('email'), role = dc.val().get('role'), userId = dc.val().get('userId'))
-		# 		# user.set_username(dc.val().get('username'))
-		# 		# user.set_email(dc.val().get('email'))
-		# 		# user.set_role(dc.val().get('role'))
-		# 		# user.set_userId(dc.val().get('userId'))
+		uidToken = loginUser['localId']
+		uEmailToken = loginUser['email']
+		
+	
+		getCurrentDB = db.child("Users").order_by_key().equal_to(uidToken).limit_to_first(1).get()
+		if getCurrentDB != None:
 
-		# 		print(user)
-		
-		
-		# print(user.get('localId'))
-		# print(user)
-		#user = auth.refresh(user['refreshToken'])
-		#user_id = user['idToken']
-		#oeo = auth.get_account_info(user['idToken'])
-		#print(oeo)
-		#print("----------")
-		#print(user)
-		#session['usr'] = user_id
-		#print("----------")
-		#print(session['usr'])
-	# 	return redirect(url_for('home'))
+			for gc in getCurrentDB.each():
+				user = User(username = gc.val().get('username'),
+						    email = gc.val().get('email'), 
+							role = gc.val().get('role'), 
+							userId = gc.val().get('userId'))
+
+			if uidToken == user.get_userId():
+				
+				session['usrId'] = uidToken
+				session["email"] = uEmailToken
+				session["usrRole"] = user.get_role()
+				session["usrUsername"] = user.get_username()
+				print(user)
+				print(session['usrId'])
+				print(session["email"])
+				print(session["usrRole"])
+				print(session["usrUsername"])
+			
+			else:
+				message = "Error!! Please Login Again"
+				return redirect(url_for('login'))
+
+		return redirect(url_for('home'))
 	else:
 			
 		message = "Incorrect Password!"
 	return render_template('loginPage.html')
 
-	# if request.method == 'POST':
-		
-	# 	email = request.form['LogInFormEmail']
-	# 	password = request.form['LogInFormPassword']
+#logout route
+@app.route("/logout")
+def logout():
 
-	# 	user = auth.sign_in_with_email_and_password(email, password)
-	# 	db.child("users").shallow().get()
+	auth.curent_user = ""
+	session.clear()
+	return redirect("/")
 
-	# 	if auth.current_user == users['localId']:
-	# 		login_user(user)
-
-
-	
-	# if request.method == 'POST':
-	# 	email = request.form['LogInFormEmail']
-	# 	password = request.form['LogInFormPassword']
-
-	# 	user = auth.sign_in_with_email_and_password(email, password)
-	# 	#user_id = auth.get_account_info(user['idToken'])
-	# 	#session['usr'] = user_id
-
-	# 	current_user = user['localId']
-	# 	print(current_user + " " + "edw malaka")
-
-	# 	if auth.current_user:
-	# 		print(auth.current_user)
-
-	# 	# print(user)
-	# 	# print("-------------------------------------")
-	# 	# print(user['idToken'])
-		
-
-	# 	# users = db.child("Users").shallow().get()
-	# 	# print(users.val())
-
-	# 	all_users = db.child("Users").get()
-	# 	for userr in all_users.each():
-	# 		print("----------------")
-	# 		print(userr.key()) 
-	# 		print("----------------")
-	# 		print(userr.val())
-	# 		print("----------------")
-	# 		print(userr.val().get('userId'))
-	# 		print("----------------")
-		
-
-		
-		
-	# 	print(user['localId'])
-	# 	return redirect(url_for('home'))
-	
-	# users = db.child("Users").get()
-	# print(users.val()) 
-		
-	# return render_template('loginPage.html')
+	# try:
+	# 	del session['usrId']
+	# 	del session["email"]
+	# 	del session["usrRole"]
+	# 	del session["usrUsername"]
+	# except KeyError:
+	# 	session.clear()
+	# return redirect("/");
+   
 
 @app.route('/homePage', methods = ['GET', 'POST'])
 def home():
@@ -142,6 +123,7 @@ def audiovideo():
 
 
 @app.route('/createAccount', methods = ['GET', 'POST'])
+@isAuthenticated
 def createAccount():
 	
 	if request.method == 'POST':
@@ -158,8 +140,10 @@ def createAccount():
 
 		#data = {"username": users.get_username(), "email": users.get_email(), "role": users.get_role(), "uid": users.get_userId()}
 		data = {"username": username, "email": email, "role": role, "userId": currentUserId}
-		collectionReference.push(data)
-		#collectionReference.push(data, user['idToken'])
+		createUserRef = db.child("Users").child(currentUserId).set(data)
+		#db.child("Users").child(currentUserId).set(data)
+		# UsercollectionReference.push(data)
+		#UsercollectionReference.push(data, user['idToken'])
 		
 		return redirect(url_for('home'))
 		

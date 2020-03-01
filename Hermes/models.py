@@ -1,6 +1,7 @@
 from Hermes import route
 
-class User:
+
+class User():
 
     def __init__(self, username, email, role, userId):
 
@@ -35,19 +36,6 @@ class User:
     
     def set_userId(self, userId):
         self.__userId = userId
-    
-    # def get_tokenId(self):
-    #     return self.__tokenId
-    
-    # def set_tokenId(self, tokenId):
-    #     self.__tokenId = tokenId
-    
-    
-        
-    # @login_manager.user_loader
-    # def load_user(user_id):
-        
-    #     return User(user_id)
-
+     
     def __repr__(self):
         return f"User('{self.__username}','{self.__email}', '{self.__userId}','{self.__role}'')"
