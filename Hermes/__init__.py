@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 #from werkzeug.utils import secure_filename
+#from flask_login import LoginManager
 import pyrebase
 import os
 import config
@@ -8,12 +9,16 @@ import config
 
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
+#login_manager = LoginManager(app)
+
 UPLOAD_FOLDER = './Hermes/static/uploadVideos'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 CORS(app)
 
 # Config for the firebase
 config = {
+    
     ..keys..
 
 }
@@ -49,4 +54,5 @@ storage = firebase.storage()
 
 
 
-from Hermes import route
+from Hermes import route, models
+from Hermes.models import User

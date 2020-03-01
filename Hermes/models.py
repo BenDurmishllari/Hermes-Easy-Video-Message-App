@@ -6,8 +6,10 @@ class User:
 
         self.__username = username
         self.__email = email
-        self.__userId = userId
         self.__role = role
+        self.__userId = userId
+        # self.__tokenId = tokenId
+        
         #self.profile_image = profile_image
     
     def get_username(self):
@@ -21,12 +23,6 @@ class User:
     
     def set_email(self, email):
         self.__email = email
-
-    def get_userId(self):
-        return self.__userId
-    
-    def set_userId(self, userId):
-        self.__userId = userId
     
     def get_role(self):
         return self.__role
@@ -34,6 +30,24 @@ class User:
     def set_role(self, role):
         self.__role = role
 
+    def get_userId(self):
+        return self.__userId
     
+    def set_userId(self, userId):
+        self.__userId = userId
+    
+    # def get_tokenId(self):
+    #     return self.__tokenId
+    
+    # def set_tokenId(self, tokenId):
+    #     self.__tokenId = tokenId
+    
+    
+        
+    # @login_manager.user_loader
+    # def load_user(user_id):
+        
+    #     return User(user_id)
+
     def __repr__(self):
         return f"User('{self.__username}','{self.__email}', '{self.__userId}','{self.__role}'')"
