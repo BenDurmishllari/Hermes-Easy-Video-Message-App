@@ -1,6 +1,16 @@
-from Hermes import app, firebase, auth, db, storage,UPLOAD_FOLDER, login_manager
-from flask import render_template, request, Response, redirect, url_for, session
-from flask_login import login_user, logout_user, login_required, current_user
+from Hermes import (app, 
+					firebase, 
+					auth, 
+					db, 
+					storage, 
+					UPLOAD_FOLDER, 
+					login_manager)
+from flask import (render_template, 
+				   request, 
+				   Response, 
+				   redirect, 
+				   url_for, 
+				   session)
 from flask_login import (login_user, 
                          logout_user, 
                          login_required, 
@@ -11,7 +21,7 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 import os
 import json
-import random
+
 
 
 
@@ -40,14 +50,17 @@ def login():
 		
 	
 		getCurrentDB = db.child("Users").order_by_key().equal_to(uid).limit_to_first(1).get()
+		
 		if getCurrentDB != None:
 
 			for gc in getCurrentDB.each():
 				user = User(username = gc.val().get('username'),
 						    email = gc.val().get('email'), 
 							role = gc.val().get('role'), 
-							userId = gc.val().get('userId'))
-		
+							userId = gc.val().get('userId'),
+							profile_image = gc.val().get('profile_image'))
+			
+			#storage.child("profile_pic/" + str(uEmailToken)).child(uid).delete()
 			login_user(user)
 			print(current_user)
 		else:
@@ -75,16 +88,16 @@ def home():
     return render_template('homePage.html')
 
 @app.route('/createVideo', methods=['GET','POST'])
+@login_required
 def recordVideo():
 	
     return render_template('createVideoPage.html')
 
 @app.route('/watchVideo')
+@login_required
 def watchVideo():
 		
     return render_template('watchVideoPage.html')
-
-
 
 
 @app.route('/recordVideo',methods = ['POST'])
@@ -100,6 +113,7 @@ def audiovideo():
 
 
 @app.route('/createAccount', methods = ['GET', 'POST'])
+# @login_required
 def createAccount():
 	
 	if request.method == 'POST':
@@ -108,15 +122,24 @@ def createAccount():
 		password = request.form['CreateAccountFormPassword']
 		username = request.form['CreateAccountFormUserName']
 		role = request.form['CreateAccountFormRole']
+		
+		pic_file = request.files['userProfilePic']
+		profile_pic = pic_file.read()
 
 			
 		user = auth.create_user_with_email_and_password(email, password)
 		currentUserId = user['localId']
+		currentUserEmail = user['email']
 		
+		put_pic = storage.child("profile_pic/" + str(currentUserEmail)).child(str(currentUserId)).put(profile_pic)
+		getCurrentPic = storage.child("profile_pic/" + str(currentUserEmail)).get_url(currentUserId)
+		data = {"username": username, 
+				"email": email, 
+				"role": role, 
+				"userId": currentUserId, 
+				"profile_image": getCurrentPic}
 		
-		data = {"username": username, "email": email, "role": role, "userId": currentUserId}
 		createUserRef = db.child("Users").child(currentUserId).set(data)
-		
 		return redirect(url_for('home'))
 		
 	return render_template('createAccountPage.html')

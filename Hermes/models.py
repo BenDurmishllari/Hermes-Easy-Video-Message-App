@@ -3,27 +3,27 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(user_id):
+    
     cUser = auth.current_user['localId']
     cUserDB = db.child("Users").order_by_key().equal_to(cUser).limit_to_first(1).get()
+    
     return User(username = cUserDB.val().get("username"),
                 email = cUserDB.val().get("email"), 
                 role = cUserDB.val().get("role"), 
-                userId = cUserDB.val().get("userId"))
+                userId = cUserDB.val().get("userId"),
+                profile_image = cUserDB.val().get("profile_image"))
 
 class User(UserMixin):
 
-    def __init__(self, username, email, role, userId):
+    def __init__(self, username, email, role, userId, profile_image):
 
         
         self.__username = username
         self.__email = email
         self.__role = role
         self.__userId = userId
-        
-        
-        
-        #self.profile_image = profile_image
-
+        self.__profile_image = profile_image
+    
     
     def is_active(self):
         return True
@@ -61,7 +61,13 @@ class User(UserMixin):
     def set_userId(self, userId):
         self.__userId = userId
     
+    def get_profile_image(self):
+        return str(self.__profile_image)
+    
+    def set_profile_image(self, profile_image):
+        self.__profile_image = profile_image
+    
     
      
     def __repr__(self):
-        return f"User('{self.__userId}','{self.__username}', '{self.__email}','{self.__role}'')"
+        return f"User('{self.__userId}','{self.__username}', '{self.__email}','{self.__role}', '{self.__profile_image}'')"
