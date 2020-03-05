@@ -60,9 +60,11 @@ def login():
 							userId = gc.val().get('userId'),
 							profile_image = gc.val().get('profile_image'))
 			
-			#storage.child("profile_pic/" + str(uEmailToken)).child(uid).delete()
+			
+			
 			login_user(user)
 			print(current_user)
+			
 		else:
 			message = "No User found!"
 		return redirect(url_for('home'))
@@ -132,7 +134,8 @@ def createAccount():
 		currentUserEmail = user['email']
 		
 		put_pic = storage.child("profile_pic/" + str(currentUserEmail)).child(str(currentUserId)).put(profile_pic)
-		getCurrentPic = storage.child("profile_pic/" + str(currentUserEmail)).get_url(currentUserId)
+		#getCurrentPic = storage.child("profile_pic/" + str(currentUserEmail)).get_url(currentUserId)
+		getCurrentPic = storage.child("profile_pic/" + str(currentUserEmail) + "/" + str(currentUserId)).get_url(str(currentUserId))
 		data = {"username": username, 
 				"email": email, 
 				"role": role, 
@@ -144,3 +147,12 @@ def createAccount():
 		
 	return render_template('createAccountPage.html')
 
+@app.route('/usersPage', methods = ['GET', 'POST'])
+# @login_required
+def users():
+
+	
+	users = db.child("Users").get().val().values()
+	
+	
+	return render_template('usersPage.html', users = users)

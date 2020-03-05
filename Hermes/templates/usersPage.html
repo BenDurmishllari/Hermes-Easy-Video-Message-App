@@ -1,0 +1,23 @@
+{% extends "index.html" %}  
+{% block content %}
+
+
+<div class="card-deck">
+    {% for user in users %}
+            <div class="col-sm-4">
+                <a href="{{ url_for('home') }}">
+                    <div class="card mb-2" style="width: 19rem;">
+                        <img  width="auto" height="300" class="card-img-top" src="{{ user.profile_image }}" alt="Card image top">
+                        <div class="card-body">
+                        <h4 class="card-title"> Name: {{ user.username }}</h4>
+                        <p class="card-text">Email: {{user.email }}</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        </div>
+                    </div> 
+                </a> 
+            </div>
+    {% endfor %}
+</div>
+
+
+{% endblock content %}
