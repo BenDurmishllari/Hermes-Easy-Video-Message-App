@@ -21,23 +21,52 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 import os
 import json
+import flask_login
 
 
 
 
+# @login_manager.user_loader
+# def load_user(user_id):
+#     s = session['_user_id']
+#     user_id = "ayHjTbjQOncuWUClEv99nAitN2n1"
+#     cUserDB = db.child("Users").order_by_key().equal_to(user_id).limit_to_first(1).get()
+	
+#     print(session['_user_id'])
+ 
+#     return User (username = cUserDB.val().get("username"),
+#                  email = cUserDB.val().get("email"), 
+#                  role = cUserDB.val().get("role"), 
+#                  id = cUserDB.val().get("id"),
+#                  profile_image = cUserDB.val().get("profile_image"))
 
+@login_manager.user_loader
+def load_user(user_id):
+    
+    cUser = auth.current_user['localId']
+	
+    cUserDB = db.child("Users").child(cUser).get()
+	
+    user = User(username = cUserDB.val().get("username"),
+                email = cUserDB.val().get("email"), 
+                role = cUserDB.val().get("role"), 
+                id = cUserDB.val().get("id"),
+                profile_image = cUserDB.val().get("profile_image"))
+	
+    return user
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
+	
 	message = ""
-
-	if current_user.is_authenticated:
-		return redirect(url_for('home'))
+	
+	
+	# if current_user.is_authenticated:
+	# 	return redirect(url_for('home'))
 
 	if request.method == "POST":
-		
 		
 
 		email = request.form["LogInFormEmail"]
@@ -45,11 +74,10 @@ def login():
 		
 		loginUser = auth.sign_in_with_email_and_password(email, password)
 		
-		uid = loginUser['localId']
+		user_id = loginUser['localId']
 		uEmailToken = loginUser['email']
 		
-	
-		getCurrentDB = db.child("Users").order_by_key().equal_to(uid).limit_to_first(1).get()
+		getCurrentDB = db.child("Users").order_by_key().equal_to(user_id).limit_to_first(1).get()
 		
 		if getCurrentDB != None:
 
@@ -57,17 +85,20 @@ def login():
 				user = User(username = gc.val().get('username'),
 						    email = gc.val().get('email'), 
 							role = gc.val().get('role'), 
-							userId = gc.val().get('userId'),
+							id = gc.val().get('id'),
 							profile_image = gc.val().get('profile_image'))
-			
-			
+		
 			
 			login_user(user)
 			print(current_user)
-			
+			#print(session['_user_id'])
+			# print("-------------login")
+			# print(session)
+			next_page = request.args.get('next')
+			return redirect(next_page) if next_page else redirect(url_for('home'))
 		else:
 			message = "No User found!"
-		return redirect(url_for('home'))
+		return redirect(url_for('login'))
 	else:
 			
 		message = "Incorrect Password!"
@@ -78,16 +109,21 @@ def login():
 def logout():
 
 	logout_user()
-
+	
+	
 	return redirect(url_for('login'))
 	
    
 
 @app.route('/homePage', methods = ['GET', 'POST'])
-@login_required
+# @login_required
 def home():
 	
-    return render_template('homePage.html')
+	
+	print(current_user)
+	# print("homepage ----------------")
+	# print(session)
+	return render_template('homePage.html')
 
 @app.route('/createVideo', methods=['GET','POST'])
 @login_required
@@ -96,10 +132,10 @@ def recordVideo():
     return render_template('createVideoPage.html')
 
 @app.route('/watchVideo')
-@login_required
+# @login_required
 def watchVideo():
-		
-    return render_template('watchVideoPage.html')
+	
+	return render_template('watchVideoPage.html')
 
 
 @app.route('/recordVideo',methods = ['POST'])
@@ -139,7 +175,7 @@ def createAccount():
 		data = {"username": username, 
 				"email": email, 
 				"role": role, 
-				"userId": currentUserId, 
+				"id": currentUserId, 
 				"profile_image": getCurrentPic}
 		
 		createUserRef = db.child("Users").child(currentUserId).set(data)
@@ -152,7 +188,11 @@ def createAccount():
 def users():
 
 	
+	
 	users = db.child("Users").get().val().values()
+	
+	print(current_user)
+
 	
 	
 	return render_template('usersPage.html', users = users)
