@@ -26,19 +26,7 @@ import flask_login
 
 
 
-# @login_manager.user_loader
-# def load_user(user_id):
-#     s = session['_user_id']
-#     user_id = "ayHjTbjQOncuWUClEv99nAitN2n1"
-#     cUserDB = db.child("Users").order_by_key().equal_to(user_id).limit_to_first(1).get()
-	
-#     print(session['_user_id'])
- 
-#     return User (username = cUserDB.val().get("username"),
-#                  email = cUserDB.val().get("email"), 
-#                  role = cUserDB.val().get("role"), 
-#                  id = cUserDB.val().get("id"),
-#                  profile_image = cUserDB.val().get("profile_image"))
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -63,8 +51,8 @@ def login():
 	message = ""
 	
 	
-	# if current_user.is_authenticated:
-	# 	return redirect(url_for('home'))
+	if current_user.is_authenticated:
+		return redirect(url_for('home'))
 
 	if request.method == "POST":
 		
@@ -128,17 +116,36 @@ def home():
 @app.route('/createVideo', methods=['GET','POST'])
 @login_required
 def recordVideo():
-	
-    return render_template('createVideoPage.html')
 
-@app.route('/watchVideo')
+	# if request.method == 'POST':
+
+	# 	return redirect(url_for('watchVideo'))
+
+	return render_template('createVideoPage.html')
+
+@app.route('/watchVideo', methods=['GET','POST'])
 # @login_required
 def watchVideo():
+
+	# user = current_user.get_id()
+
+	# # currentUser = db.child("Users").child(user).get().val().get('id')
+	
+	# print(user)
+	
+	# if request.method == 'POST':
+		
+	# 	user = current_user.get_id()
+	# 	# currentUser = db.child("Users").child(user).get().val().get('id')
+	# 	print(user)
+		
+
+	# 	return redirect(url_for('users'))
 	
 	return render_template('watchVideoPage.html')
 
 
-@app.route('/recordVideo',methods = ['POST'])
+@app.route('/recordVideo',methods = ['GET','POST'])
 def audiovideo():
 	
 	if request.method == 'POST':
@@ -147,6 +154,7 @@ def audiovideo():
 		filename = secure_filename(filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 	return "success"
+	
 
 
 
@@ -191,8 +199,10 @@ def users():
 	
 	users = db.child("Users").get().val().values()
 	
-	print(current_user)
+	# print(current_user)
+	#print(users)
 
 	
 	
 	return render_template('usersPage.html', users = users)
+

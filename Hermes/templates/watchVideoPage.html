@@ -13,18 +13,34 @@
             <video width="1080" height="620" controls>
                 <source src={{ url_for('static', filename="./uploadVideos/myaudiovideo.mp4") }} type="video/mp4">
                 Your browser does not support the video tag.
-              </video>
+            </video>
               <!-- <video id="vid2" controls></video> -->
         </div>
         <div class="card-footer text-muted">
-            
-            
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <form method="POST" action="">
+                  <button type="submit" class="btn btn-dark" style="margin-right: 50px;"><i class="fa fa-reply-all"></i>Make another Video</button>
+                </form> 
+              </div>
+              <div class="col-sm">
+                <form method="POST" action="">
+                  <button type="submit" class="btn btn-danger" style="margin-left: 50px;">Send Video</button>
+                </form>   
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+    </div>
 
 
-
-
+      <!-- <form>
+        <button type="button" class="btn btn-dark" style="margin-right: 50px;"><i class="fa fa-reply-all"></i>Make another Video</button>
+      </form>
+      <form>
+        <a type="button" class="btn btn-danger" style="margin-left: 50px;">Send Video</a>
+      </form>   -->
 
 
 

@@ -35,19 +35,19 @@ from flask import session
 #                 profile_image = cUserDB.val().get("profile_image"))
 #     return cUserDB.val()
 
-@login_manager.user_loader
-def load_user(user_id):
-    #s = session['_user_id']
-    user_id = "ayHjTbjQOncuWUClEv99nAitN2n1"
-    cUserDB = db.child("Users").order_by_key().equal_to(user_id).limit_to_first(1).get()
+# @login_manager.user_loader
+# def load_user(user_id):
+#     #s = session['_user_id']
+#     user_id = "ayHjTbjQOncuWUClEv99nAitN2n1"
+#     cUserDB = db.child("Users").order_by_key().equal_to(user_id).limit_to_first(1).get()
 	
-    #print(session['_user_id'])
+#     #print(session['_user_id'])
  
-    return User (username = cUserDB.val().get("username"),
-                 email = cUserDB.val().get("email"), 
-                 role = cUserDB.val().get("role"), 
-                 id = cUserDB.val().get("id"),
-                 profile_image = cUserDB.val().get("profile_image"))
+#     return User (username = cUserDB.val().get("username"),
+#                  email = cUserDB.val().get("email"), 
+#                  role = cUserDB.val().get("role"), 
+#                  id = cUserDB.val().get("id"),
+#                  profile_image = cUserDB.val().get("profile_image"))
 
 class User(UserMixin):
 
@@ -57,7 +57,7 @@ class User(UserMixin):
         self.__username = username
         self.__email = email
         self.__role = role
-        self.id = id
+        self.__id = id
         self.__profile_image = profile_image
     
     
@@ -71,7 +71,7 @@ class User(UserMixin):
         return False
     
     def get_id(self):
-        return str(self.id)
+        return str(self.__id)
 
     def get_username(self):
         return self.__username
@@ -94,8 +94,8 @@ class User(UserMixin):
     # def get_userId(self):
     #     return self.__userId
     
-    def set_userId(self, id):
-        self.id = id
+    def set_Id(self, id):
+        self.__id = id
     
     def get_profile_image(self):
         return str(self.__profile_image)
@@ -106,4 +106,4 @@ class User(UserMixin):
     
      
     def __repr__(self):
-        return f"User('{self.id}','{self.__username}', '{self.__email}','{self.__role}', '{self.__profile_image}'')"
+        return f"User('{self.__id}','{self.__username}', '{self.__email}','{self.__role}', '{self.__profile_image}'')"

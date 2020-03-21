@@ -22,7 +22,6 @@
     
     <!-- ref to recordVideo.js -->
     <script src="{{url_for('static', filename='js/recordVideo.js')}}"></script>
-    
     <div  class="card text-center">
         <div class="card-header">
           Record Video
@@ -31,16 +30,28 @@
             <video  width="1080" height="620" controls muted="muted"></video>
         </div>
         <div class="card-footer text-muted">
-            <button id="btnStart"  class="btn btn-danger btn-circle btn-xl">Record</button>
-            <button id="btnStop"  class="btn btn-dark btn-circle btn-xl">STOP</button>
+            <div class="container">
+                <div class="row">
+                  <div class="col-sm">
+                    
+                        <button id="btnStart"  class="btn btn-danger btn-circle btn-xl" style="margin-right: 50px;">Record</button>
+                    
+                  </div>
+                  <div class="col-sm">
+                    
+                        <button id="btnStop"  class="btn btn-dark btn-circle btn-xl" style="margin-left: 50px;">STOP</button> 
+                  
+                  </div>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
 
 
 
-
-
-
+    <!-- <button id="btnStart"  class="btn btn-danger btn-circle btn-xl" style="margin-right: 50px;">Record</button>
+            
+    <button id="btnStop"  class="btn btn-dark btn-circle btn-xl" style="margin-left: 50px;">STOP</button> -->
 
 
 

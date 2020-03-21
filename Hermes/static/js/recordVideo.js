@@ -121,6 +121,7 @@ navigator.mediaDevices.getUserMedia(constraintObj)
         //alert('Video Record Stopped!');
         //clearInterval(counter);
         console.log(mediaRecorder.state);
+        
     });
     mediaRecorder.ondataavailable = function(ev) {
         chunks.push(ev.data);
@@ -135,11 +136,12 @@ navigator.mediaDevices.getUserMedia(constraintObj)
 
         var formData = new FormData();
         formData.append('video', blob);
-
+        
         // Execute the ajax request, in this case we have a very simple PHP script
         // that accepts and save the uploaded "video" file
         xhr('/recordVideo', formData, function (fName) {
             console.log("Video succesfully uploaded !");
+            window.location.href = "/watchVideo"; 
         });
 
         // Helper function to send 
@@ -149,10 +151,12 @@ navigator.mediaDevices.getUserMedia(constraintObj)
                 if (request.readyState == 4 && request.status == 200) {
                     callback(location.href + request.responseText);
                 }
+            
             };
             request.open('POST', url);
             request.send(data);
         }
+        
     }
     
 })

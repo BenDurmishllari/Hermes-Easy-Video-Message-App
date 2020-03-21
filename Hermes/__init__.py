@@ -25,7 +25,8 @@ CORS(app)
 # Config for the firebase
 config = {
     
-   ..keys..
+ ...keys...
+ 
 
 }
 
