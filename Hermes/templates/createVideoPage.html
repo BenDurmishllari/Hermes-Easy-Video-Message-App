@@ -22,6 +22,13 @@
     
     <!-- ref to recordVideo.js -->
     <script src="{{url_for('static', filename='js/recordVideo.js')}}"></script>
+    <div id="results"><!-- Results are displayed here --></div>
+    <div id="fade"></div>
+    <div id="modal" class="spinner-border" role="status">
+        <!-- <img id="loader" src={{ url_for('static', filename="../logo/loading.gif") }} /> -->
+        <span class="sr-only">Loading...</span>
+    </div>
+
     <div  class="card text-center">
         <div class="card-header">
           Record Video

@@ -548,6 +548,10 @@ rgba(0,0,0,0.16),0 2px 10px 0
 }
 /*register form*/
 
+/* snipper after record video */
+#content {
+    padding:25px;
+}
 
 #fade {
     display: none;
@@ -568,19 +572,20 @@ rgba(0,0,0,0.16),0 2px 10px 0
     position: absolute;
     top: 45%;
     left: 45%;
-    width: 64px;
-    height: 64px;
+    width: 120px;
+    height: 120px;
     padding:30px 15px 0px;
-    border: 3px solid #ababab;
-    box-shadow:1px 1px 10px #ababab;
-    border-radius:20px;
-    background-color: white;
+    border: 3px solid #0e0e0e;
+    box-shadow:7px 7px 10px #DC3232;
+    /* border-radius:20px; */
+    /* background-color: rgb(255, 255, 255); */
     z-index: 1002;
     text-align:center;
     overflow: auto;
 }
 
 #results {
-    font-size:1.25em;
+    font-size:4.25em;
     color:red
 }
+/* snipper after record video */

@@ -63,6 +63,15 @@ if (navigator.mediaDevices === undefined) {
 // }
 
 
+function openModal() {
+    document.getElementById('modal').style.display = 'block';
+    document.getElementById('fade').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('fade').style.display = 'none';
+}
 
 navigator.mediaDevices.getUserMedia(constraintObj)
 .then(function(mediaStreamObj) {
@@ -121,7 +130,8 @@ navigator.mediaDevices.getUserMedia(constraintObj)
         //alert('Video Record Stopped!');
         //clearInterval(counter);
         console.log(mediaRecorder.state);
-        
+        document.getElementById('results').innerHTML = '';
+        openModal();
     });
     mediaRecorder.ondataavailable = function(ev) {
         chunks.push(ev.data);
@@ -133,6 +143,8 @@ navigator.mediaDevices.getUserMedia(constraintObj)
         // let videoURL = window.URL.createObjectURL(blob);
         // vidSave.src = videoURL;
         //console.log(blob);
+
+        
 
         var formData = new FormData();
         formData.append('video', blob);
@@ -151,10 +163,13 @@ navigator.mediaDevices.getUserMedia(constraintObj)
                 if (request.readyState == 4 && request.status == 200) {
                     callback(location.href + request.responseText);
                 }
-            
+               
             };
+            
             request.open('POST', url);
             request.send(data);
+            
+            
         }
         
     }
