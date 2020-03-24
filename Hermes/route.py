@@ -22,7 +22,8 @@ from functools import wraps
 import os
 import json
 import flask_login
-
+import calendar;
+import time;
 
 
 
@@ -117,45 +118,46 @@ def home():
 @login_required
 def recordVideo():
 
-	# if request.method == 'POST':
-
-	# 	return redirect(url_for('watchVideo'))
-
 	return render_template('createVideoPage.html')
 
 @app.route('/watchVideo', methods=['GET','POST'])
 # @login_required
 def watchVideo():
+	us = current_user.get_id()
+	file = "./static/uploadVideos/" + str(us) + ".mp4"
 
-	# user = current_user.get_id()
-
-	# # currentUser = db.child("Users").child(user).get().val().get('id')
-	
-	# print(user)
-	
-	# if request.method == 'POST':
-		
-	# 	user = current_user.get_id()
-	# 	# currentUser = db.child("Users").child(user).get().val().get('id')
-	# 	print(user)
-		
-
-	# 	return redirect(url_for('users'))
-	
-	return render_template('watchVideoPage.html')
+	if request.method == 'POST':
+		os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(us) + ".mp4"))
+		return redirect(url_for('recordVideo'))
+	return render_template('watchVideoPage.html', file = file)
 
 
 @app.route('/recordVideo',methods = ['GET','POST'])
 def audiovideo():
-	
+	uid = current_user.get_id()
+	ts = calendar.timegm(time.gmtime())
+
 	if request.method == 'POST':
 		file = request.files['video']
-		filename = "myaudiovideo.mp4"
+		filename = str(uid) + ".mp4"
+		#filename = "myaudiovideo.mp4"
 		filename = secure_filename(filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 	return "success"
 	
 
+# don't keep cache, any time it's play the current video
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
 
 
 @app.route('/createAccount', methods = ['GET', 'POST'])
@@ -195,14 +197,7 @@ def createAccount():
 # @login_required
 def users():
 
-	
-	
 	users = db.child("Users").get().val().values()
-	
-	# print(current_user)
-	#print(users)
-
-	
-	
+		
 	return render_template('usersPage.html', users = users)
 

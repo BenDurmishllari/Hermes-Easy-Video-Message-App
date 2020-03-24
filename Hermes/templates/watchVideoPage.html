@@ -16,9 +16,11 @@
                   <!-- <source src="./static/uploadVideos/myaudiovideo.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video> -->
-            <video class="afterglow" id="myvideo"  width="1080" height="620" controls>
-              <source src="./static/uploadVideos/myaudiovideo.mp4" type="video/mp4"/>
-            </video>
+            <form method="GET">
+              <video class="afterglow" id="myvideo"  width="1080" height="620" controls>
+                <source src="{{ file }}" type="video/mp4"/>
+              </video>
+            </form>
             
               <!-- <video id="vid2" controls></video> -->
         </div>
@@ -26,7 +28,7 @@
           <div class="container">
             <div class="row">
               <div class="col-sm">
-                <form method="POST" action="">
+                <form method="POST" action="" name="makeOtherVideo">
                   <button type="submit" class="btn btn-dark" style="margin-right: 50px;"><i class="fa fa-reply-all"></i>Make another Video</button>
                 </form> 
               </div>

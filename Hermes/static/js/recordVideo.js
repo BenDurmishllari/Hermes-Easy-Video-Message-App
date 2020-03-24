@@ -140,9 +140,10 @@ navigator.mediaDevices.getUserMedia(constraintObj)
     mediaRecorder.onstop = (ev)=>{
         let blob = new Blob(chunks, { 'type' : 'video/mp4;' });
         chunks = [];
+        
         // let videoURL = window.URL.createObjectURL(blob);
         // vidSave.src = videoURL;
-        //console.log(blob);
+        // console.log(blob);
 
         
 
@@ -165,7 +166,6 @@ navigator.mediaDevices.getUserMedia(constraintObj)
                 }
                
             };
-            
             request.open('POST', url);
             request.send(data);
             
