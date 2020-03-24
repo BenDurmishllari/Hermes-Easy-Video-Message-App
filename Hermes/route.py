@@ -44,6 +44,22 @@ def load_user(user_id):
 	
     return user
 
+
+# don't keep cache, any time it's play the current video
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -123,12 +139,21 @@ def recordVideo():
 @app.route('/watchVideo', methods=['GET','POST'])
 # @login_required
 def watchVideo():
-	us = current_user.get_id()
-	file = "./static/uploadVideos/" + str(us) + ".mp4"
+	
+	uid = current_user.get_id()
+	file = "./static/uploadVideos/" + str(uid) + ".mp4"
 
+	
 	if request.method == 'POST':
-		os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(us) + ".mp4"))
-		return redirect(url_for('recordVideo'))
+		if 'btnMakeOtherVideo' in request.form:
+			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(uid) + ".mp4"))
+			return redirect(url_for('recordVideo'))
+	
+	if request.method == 'POST':
+		if 'btnSendVideo' in request.form:
+		
+			return redirect(url_for('users', cUser = str(uid)))
+			
 	return render_template('watchVideoPage.html', file = file)
 
 
@@ -146,18 +171,7 @@ def audiovideo():
 	return "success"
 	
 
-# don't keep cache, any time it's play the current video
-@app.after_request
-def add_header(r):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minutes.
-    """
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
+
 
 
 @app.route('/createAccount', methods = ['GET', 'POST'])
@@ -193,10 +207,11 @@ def createAccount():
 		
 	return render_template('createAccountPage.html')
 
-@app.route('/usersPage', methods = ['GET', 'POST'])
+@app.route('/usersPage/<cUser>', methods = ['GET', 'POST'])
 # @login_required
-def users():
+def users(cUser):
 
+	cUser = current_user.get_id()
 	users = db.child("Users").get().val().values()
 		
 	return render_template('usersPage.html', users = users)
