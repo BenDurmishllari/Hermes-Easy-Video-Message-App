@@ -24,6 +24,7 @@ import json
 import flask_login
 import calendar;
 import time;
+import random
 
 
 
@@ -136,25 +137,38 @@ def recordVideo():
 
 	return render_template('createVideoPage.html')
 
+
+
 @app.route('/watchVideo', methods=['GET','POST'])
 # @login_required
 def watchVideo():
 	
 	uid = current_user.get_id()
-	file = "./static/uploadVideos/" + str(uid) + ".mp4"
+	ts = calendar.timegm(time.gmtime())
+	 
+	current_video = "./static/uploadVideos/" + str(uid) + ".mp4"
+	# characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'
+	# result = ''
+	# for i in range(0, 11):
+	# 	result += random.choice(characters)	
 
-	
+	# if request.method == 'GET':
+		
+	# 	return redirect(url_for('watchVideo',result=result))
+
+
 	if request.method == 'POST':
 		if 'btnMakeOtherVideo' in request.form:
 			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(uid) + ".mp4"))
+			
 			return redirect(url_for('recordVideo'))
 	
 	if request.method == 'POST':
 		if 'btnSendVideo' in request.form:
 		
-			return redirect(url_for('users', cUser = str(uid)))
+			return redirect(url_for('users'))
 			
-	return render_template('watchVideoPage.html', file = file)
+	return render_template('watchVideoPage.html', current_video = current_video)
 
 
 @app.route('/recordVideo',methods = ['GET','POST'])
@@ -207,12 +221,24 @@ def createAccount():
 		
 	return render_template('createAccountPage.html')
 
-@app.route('/usersPage/<cUser>', methods = ['GET', 'POST'])
+@app.route('/users', methods = ['GET', 'POST'])
 # @login_required
-def users(cUser):
+def users():
 
 	cUser = current_user.get_id()
 	users = db.child("Users").get().val().values()
+	print(users)
 		
-	return render_template('usersPage.html', users = users)
+	return render_template('usersPage.html',users = users)
 
+@app.route('/sendMessage/<id>', methods = ['GET', 'POST'])
+# @login_required
+def sendMessage(id):
+
+	#receiver = db.child("Users").order_by_key().equal_to(id).limit_to_first(1).get().val().values()
+	#id = db.child("Users").child(id).get().val().get('id')
+	receiver = db.child("Users").child(id).get().val()
+	print(receiver)
+	
+		
+	return render_template('sendMessagePage.html', receiver = receiver )

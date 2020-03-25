@@ -5,7 +5,7 @@
 <div class="card-deck">
     {% for user in users %}
             <div class="col-sm-4">
-                <a href="{{ url_for('home') }}">
+                <a href="/sendMessage/{{ user.id }}">
                     <div class="card mb-2" style="width: 19rem;">
                         <img  width="auto" height="300" class="card-img-top" src="{{ user.profile_image }}" alt="Card image top">
                         <div class="card-body">
