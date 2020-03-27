@@ -4,31 +4,34 @@
 
 
 
+{% for r in receiver %}
     <div  class="card text-center">
-        <div class="card-header">
-          Send Video Message
-        </div>
-        <div  class="card-body">
-            <img class="rounded mx-auto d-block" src="{{ url_for('static', filename='./logo/envelop.gif')}}" alt="Card image">
-            <h1>Send Message to {{ receiver.username }}</h1>
-        </div>
-        <div class="card-footer text-muted">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm">
-                <form method="POST" action="">
-                  
-                </form> 
-              </div>
-              <div class="col-sm">
-                <form method="POST" action="">
-                  
-                </form>   
-              </div>
+      <div class="card-header">
+        Send Video Message
+      </div>
+      <div  class="card-body">
+          <img class="rounded mx-auto d-block" src="{{ url_for('static', filename='./logo/envelop.gif')}}" alt="Card image">
+          <h1>Send Message to {{ r.val().username }}</h1>
+      </div>
+      <div class="card-footer text-muted">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm">
+              <form method="POST" action="">
+                
+              </form> 
+            </div>
+            <div class="col-sm">
+              <form method="POST" action="">
+                <button name="btnSendMessage" type="submit" class="btn btn-danger" style="margin-left: 50px;">Ok</button>
+              </form>   
             </div>
           </div>
         </div>
+      </div>
     </div>
+
+{% endfor %}
 
 
      

@@ -22,8 +22,8 @@ from functools import wraps
 import os
 import json
 import flask_login
-import calendar;
-import time;
+import calendar
+import time
 import random
 
 
@@ -122,7 +122,7 @@ def logout():
    
 
 @app.route('/homePage', methods = ['GET', 'POST'])
-# @login_required
+@login_required
 def home():
 	
 	
@@ -132,7 +132,7 @@ def home():
 	return render_template('homePage.html')
 
 @app.route('/createVideo', methods=['GET','POST'])
-@login_required
+# @login_required
 def recordVideo():
 
 	return render_template('createVideoPage.html')
@@ -235,10 +235,35 @@ def users():
 # @login_required
 def sendMessage(id):
 
-	#receiver = db.child("Users").order_by_key().equal_to(id).limit_to_first(1).get().val().values()
+	receiver = db.child("Users").order_by_key().equal_to(id).limit_to_first(1).get()
+	current_userId = current_user.get_id()
+	current_video = "./Hermes/static/uploadVideos/" + str(current_userId) + ".mp4"
+
+	timestamp = calendar.timegm(time.gmtime())
 	#id = db.child("Users").child(id).get().val().get('id')
-	receiver = db.child("Users").child(id).get().val()
-	print(receiver)
+	#receiver = db.child("Users").child(id).get().val()
+	for r in receiver:
+		receiverId = r.val().get('id')
+	if request.method == 'POST':
+		if 'btnSendMessage' in request.form:
+			# put_video = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(current_userId) + "_" + str(receiverId)).put(current_video)
+			#get_Video = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
+			
+			
+			test = "https://firebasestorage.googleapis.com/v0/b/hermes-d58c7.appspot.com/o/Videos%2FcPpoCCXnIvcAlZiTpWPoDlr5idY2_D2jDotkXctdhhNejE1sr43GvfXi2%2F1585270402%2FcPpoCCXnIvcAlZiTpWPoDlr5idY2_D2jDotkXctdhhNejE1sr43GvfXi2?alt=media&token=541c7078-164e-4993-842f-17f1337dbdb4"
+			#put_video = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" +str(current_userId) + "_" + str(receiverId)).put(current_video)
+			#get_Video = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId) + "/").child(str(timestamp) +"/").get_url(str(current_userId) + "_" + str(receiverId))
+			#print(get_Video)
+			data = {
+				
+			}
+			return redirect(url_for('watchVideo'))
+			
 	
-		
 	return render_template('sendMessagePage.html', receiver = receiver )
+
+
+# path_on_cloud = "videos"
+# path_on_local = "./Hermes/static/uploadVideos/myaudiovideo.mp4"
+# storage.child(path_on_cloud).put(path_on_local)
+# vide_url = storage.child(path_on_cloud).get_url()
