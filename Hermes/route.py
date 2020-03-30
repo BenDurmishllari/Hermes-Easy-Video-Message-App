@@ -25,6 +25,7 @@ import flask_login
 import calendar
 import time
 import random
+import uuid
 
 
 
@@ -125,10 +126,11 @@ def logout():
 @login_required
 def home():
 	
+	if request.method == 'POST':
+		if 'btnInbox' in request.form:
+			return redirect(url_for('inbox'))
 	
 	print(current_user)
-	# print("homepage ----------------")
-	# print(session)
 	return render_template('homePage.html')
 
 @app.route('/createVideo', methods=['GET','POST'])
@@ -237,33 +239,105 @@ def sendMessage(id):
 
 	receiver = db.child("Users").order_by_key().equal_to(id).limit_to_first(1).get()
 	current_userId = current_user.get_id()
+	current_userName = current_user.get_username()
 	current_video = "./Hermes/static/uploadVideos/" + str(current_userId) + ".mp4"
-
-	timestamp = calendar.timegm(time.gmtime())
+	senderImageUrl = sendersImages = db.child("Users").child(current_userId).get().val().get('profile_image')
+	
+	# timestamp = calendar.timegm(time.gmtime())
+	# print(timestamp)
 	#id = db.child("Users").child(id).get().val().get('id')
 	#receiver = db.child("Users").child(id).get().val()
 	for r in receiver:
 		receiverId = r.val().get('id')
+	
 	if request.method == 'POST':
 		if 'btnSendMessage' in request.form:
-			# put_video = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(current_userId) + "_" + str(receiverId)).put(current_video)
-			#get_Video = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
+			
+			timestamp = calendar.timegm(time.gmtime())
+			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
+			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
+			
+			data = {"senderId": current_userId,
+					"receiverId": receiverId,
+					"senderName": current_userName,
+					"createdAt": timestamp,
+					"messageBody": getVideoUrl,
+					"profile_image": senderImageUrl}
+			
+			createMessage = db.child("Messages").child(receiverId).child(current_userId).child().push(data)
+
 			
 			
-			test = "https://firebasestorage.googleapis.com/v0/b/hermes-d58c7.appspot.com/o/Videos%2FcPpoCCXnIvcAlZiTpWPoDlr5idY2_D2jDotkXctdhhNejE1sr43GvfXi2%2F1585270402%2FcPpoCCXnIvcAlZiTpWPoDlr5idY2_D2jDotkXctdhhNejE1sr43GvfXi2?alt=media&token=541c7078-164e-4993-842f-17f1337dbdb4"
-			#put_video = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" +str(current_userId) + "_" + str(receiverId)).put(current_video)
-			#get_Video = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId) + "/").child(str(timestamp) +"/").get_url(str(current_userId) + "_" + str(receiverId))
-			#print(get_Video)
-			data = {
-				
-			}
 			return redirect(url_for('watchVideo'))
 			
 	
 	return render_template('sendMessagePage.html', receiver = receiver )
 
 
-# path_on_cloud = "videos"
-# path_on_local = "./Hermes/static/uploadVideos/myaudiovideo.mp4"
-# storage.child(path_on_cloud).put(path_on_local)
-# vide_url = storage.child(path_on_cloud).get_url()
+@app.route('/inbox', methods = ['GET', 'POST'])
+# @login_required
+def inbox():
+	
+	current_userId = current_user.get_id()
+	
+	current_userMessages = db.child("Messages").child(current_userId).get()
+
+	
+
+	for cuMessages in current_userMessages.each():
+		messages = cuMessages.val().values()
+		print(messages)
+		
+
+		# for m in messages:
+		# 	senderId = m.get('senderId')
+		# 	senderUsername = m.get('senderName')
+		# 	timestamp = m.get('createdAt')
+		# 	senderImageUrl = m.get('profile_image')
+
+			
+			
+
+
+
+	# lisi
+	# for cuMessages in current_userMessages.each():
+	# 	malaka = cuMessages.val().values()
+
+	# 	for m in malaka:
+	# 		print(m.get('senderId'))
+	
+		
+
+	
+	
+
+
+	# sosto
+	# for al in allMsg:
+	# 	messageValues = al.val().values()
+	# 	print(messageValues)
+		
+			
+		
+		 
+	
+	# for al in allMsg:
+	# 	print(al.key())
+	# 	message = al.child().get()
+		
+
+	# for a in allMsg:
+	# 	print(a.key())
+	# 	print(a.val())
+		
+	# for allmsg in allMsg.each():
+	# 	print(allmsg.key())
+	# 	print("------------------")
+	# 	print(allmsg.val())
+
+	
+	
+		
+		
+	return render_template('inboxPage.html', messages = messages)
