@@ -30,6 +30,11 @@ from collections import OrderedDict
 from odict import odict
 
 
+# added
+import hashlib
+import base64
+
+
 
 
 
@@ -240,27 +245,48 @@ def users():
 def sendMessage(id):
 
 	receiver = db.child("Users").order_by_key().equal_to(id).limit_to_first(1).get()
-	# print("edw--------")
-	# print(receiver.val())
 	current_userId = current_user.get_id()
 	current_userName = current_user.get_username()
 	current_video = "./Hermes/static/uploadVideos/" + str(current_userId) + ".mp4"
 	senderImageUrl = db.child("Users").child(current_userId).get().val().get('profile_image')
 	
-	# timestamp = calendar.timegm(time.gmtime())
-	# print(timestamp)
-	#id = db.child("Users").child(id).get().val().get('id')
-	#receiver = db.child("Users").child(id).get().val()
+	
 	for r in receiver:
 		receiverId = r.val().get('id')
 	
 	if request.method == 'POST':
 		if 'btnSendMessage' in request.form:
 			
+			
+			with open(current_video, "rb") as f:
+				file_hash = hashlib.md5()
+				for chunk in iter(lambda: f.read(8192), b''): 
+					print 
+					file_hash.update(chunk)
+			print (file_hash.digest()) #video that its on server
+			# print (file_hash.hexdigest()) # debugging
+
 			timestamp = calendar.timegm(time.gmtime())
+			# Uploads to firebase
 			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
 			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
 			
+			
+			# temp = putVideo.json() # converts to json
+			
+			# print(temp["md5Hash"]) 
+			# base64dec = base64.b64decode(temp["md5Hash"])
+			
+			# if base64dec == file_hash.digest():
+			# 	print("The files are the same")
+			# else:
+			# 	print("ERROR FILES NOT THE SAME")
+			
+			
+			
+			print("-----serverPrejson")
+			print(putVideo)
+
 			data = {"sender_id": current_userId,
 					"receiver_id": receiverId,
 					"sender_name": current_userName,
@@ -270,9 +296,10 @@ def sendMessage(id):
 			
 			#createMessage = db.child("Messages").child(current_userId + "_" + receiverId).child().push(data)
 			createMessage = db.child("Messages").child(receiverId).child(current_userId).child().push(data)
+			print(createMessage)
 
 			
-			
+
 			return redirect(url_for('watchVideo'))
 			
 	
@@ -298,6 +325,6 @@ def inbox():
 			messages = db.child("Messages").child(current_userId).child(senderId).child(messageId).get()
 			
 			data[messageId] = dict(messages.val())
-		
+	print(data)	
 		
 	return render_template('inboxPage.html', messages=data.values(), messageKeys = data.keys())
