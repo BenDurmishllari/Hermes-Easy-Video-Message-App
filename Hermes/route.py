@@ -26,6 +26,8 @@ import calendar
 import time
 import random
 import uuid
+from collections import OrderedDict
+from odict import odict
 
 
 
@@ -230,7 +232,7 @@ def users():
 	cUser = current_user.get_id()
 	users = db.child("Users").get().val().values()
 	print(users)
-		
+	
 	return render_template('usersPage.html',users = users)
 
 @app.route('/sendMessage/<id>', methods = ['GET', 'POST'])
@@ -238,10 +240,12 @@ def users():
 def sendMessage(id):
 
 	receiver = db.child("Users").order_by_key().equal_to(id).limit_to_first(1).get()
+	# print("edw--------")
+	# print(receiver.val())
 	current_userId = current_user.get_id()
 	current_userName = current_user.get_username()
 	current_video = "./Hermes/static/uploadVideos/" + str(current_userId) + ".mp4"
-	senderImageUrl = sendersImages = db.child("Users").child(current_userId).get().val().get('profile_image')
+	senderImageUrl = db.child("Users").child(current_userId).get().val().get('profile_image')
 	
 	# timestamp = calendar.timegm(time.gmtime())
 	# print(timestamp)
@@ -257,13 +261,14 @@ def sendMessage(id):
 			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
 			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
 			
-			data = {"senderId": current_userId,
-					"receiverId": receiverId,
-					"senderName": current_userName,
-					"createdAt": timestamp,
-					"messageBody": getVideoUrl,
+			data = {"sender_id": current_userId,
+					"receiver_id": receiverId,
+					"sender_name": current_userName,
+					"created_at": timestamp,
+					"message_body": getVideoUrl,
 					"profile_image": senderImageUrl}
 			
+			#createMessage = db.child("Messages").child(current_userId + "_" + receiverId).child().push(data)
 			createMessage = db.child("Messages").child(receiverId).child(current_userId).child().push(data)
 
 			
@@ -280,64 +285,19 @@ def inbox():
 	
 	current_userId = current_user.get_id()
 	
-	current_userMessages = db.child("Messages").child(current_userId).get()
+	current_userMessages = db.child("Messages").child(current_userId)
 
-	
-
-	for cuMessages in current_userMessages.each():
-		messages = cuMessages.val().values()
-		print(messages)
+	data = {}
+	for s in current_userMessages.get():
+		senderId = s.key()
+		sender = db.child("Messages").child(current_userId).child(senderId)
 		
-
-		# for m in messages:
-		# 	senderId = m.get('senderId')
-		# 	senderUsername = m.get('senderName')
-		# 	timestamp = m.get('createdAt')
-		# 	senderImageUrl = m.get('profile_image')
-
+		for msgId in sender.get():
+			messageId = msgId.key()
 			
+			messages = db.child("Messages").child(current_userId).child(senderId).child(messageId).get()
 			
-
-
-
-	# lisi
-	# for cuMessages in current_userMessages.each():
-	# 	malaka = cuMessages.val().values()
-
-	# 	for m in malaka:
-	# 		print(m.get('senderId'))
-	
-		
-
-	
-	
-
-
-	# sosto
-	# for al in allMsg:
-	# 	messageValues = al.val().values()
-	# 	print(messageValues)
-		
-			
-		
-		 
-	
-	# for al in allMsg:
-	# 	print(al.key())
-	# 	message = al.child().get()
-		
-
-	# for a in allMsg:
-	# 	print(a.key())
-	# 	print(a.val())
-		
-	# for allmsg in allMsg.each():
-	# 	print(allmsg.key())
-	# 	print("------------------")
-	# 	print(allmsg.val())
-
-	
-	
+			data[messageId] = dict(messages.val())
 		
 		
-	return render_template('inboxPage.html', messages = messages)
+	return render_template('inboxPage.html', messages=data.values(), messageKeys = data.keys())

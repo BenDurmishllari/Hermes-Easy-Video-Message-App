@@ -1,7 +1,7 @@
 {% extends "index.html" %}  
 {% block content %}
 
-<!-- 
+
 <dic class="container">
     <div class="card">
         <div class="card-header" style="text-align: center;">
@@ -12,13 +12,13 @@
                 {% for m in messages %}    
                     <div class="row msg_container base_receive" id="inboxDiv">
                         <div class="col-md-2 col-xs-2 avatar">
-                            <img id="imgInbox" src="{{ m.profile_image }}" class=" img-responsive ">
+                            <img  height="150px" width="auto" id="imgInbox" src="{{ m.profile_image }}" class=" img-responsive ">
                         </div>
                         <div class="col-md-10 col-xs-10">
                             <div class="messages msg_receive">
-                                <h4 class="card-title">{{ m.senderName }}</h4>
+                                <h4 class="card-title">{{ m.sender_name }}</h4>
                                 <p class="card-text">Email: </p>
-                                <p class="card-text"><small class="text-muted">{{ m.createdAt }}</small></p>
+                                <p class="card-text"><small class="text-muted">{{ m.created_at }}</small></p>
                             </div>
                         </div>
                     </div>
@@ -26,24 +26,16 @@
             </div>
       
     </div>
-</dic> -->
+</dic>
 
-<div class="card-deck">
-    {% for m in messages %}
-            <div class="col-sm-4">
-               
-                    <div class="card mb-2" style="width: 19rem;">
-                        <img  width="auto" height="300" class="card-img-top" src="{{ m.profile_image }}" alt="Card image top">
-                        <div class="card-body">
-                        <h4 class="card-title"> Name: {{ m.senderName }}</h4>
-                        
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div> 
-   
-            </div>
-    {% endfor %}
-</div>
+<!-- <div class="card-deck">
+        {% for m in messages %}
+            
+            
+            <h1>Value: {{ m.created_at }}</h1>
+            
+        {% endfor %}
+</div> -->
 
 
 
