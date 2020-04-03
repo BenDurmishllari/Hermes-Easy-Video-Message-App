@@ -1,0 +1,61 @@
+{% extends "index.html" %}  
+{% block content %}
+
+
+
+<!-- <script src="{{url_for('static', filename='js/recordVideo.js')}}"></script> -->
+<script type=”text/javascript” src=”//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js”></script>
+    <div  class="card text-center">
+        <div class="card-header">
+          Watch Video
+        </div>
+        <div  class="card-body">
+            <!-- <video id="vid2" controls  width="1080" height="620" ></video> -->
+            <!-- <video autoplay loop width="1080" height="620" controls> -->
+                <!-- <source src={{ url_for('static', filename="./uploadVideos/myaudiovideo.mp4") }} type="video/mp4"> -->
+                  <!-- <source src="./static/uploadVideos/myaudiovideo.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video> -->
+            {% for m in videoMessage %}
+              <form method="GET">
+                <video class="afterglow" id="myvideo"  width="1080" height="620" controls>
+                  <source src="{{ m.val().message_body }}" type="video/mp4"/>
+                </video>
+              </form>
+            {% endfor %}
+            
+              <!-- <video id="vid2" controls></video> -->
+        </div>
+        <div class="card-footer text-muted">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <form method="POST" action="">
+                  
+                </form> 
+              </div>
+              <div class="col-sm">
+                <form method="POST" action="">
+                  
+                </form>   
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+      <!-- <form>
+        <button type="button" class="btn btn-dark" style="margin-right: 50px;"><i class="fa fa-reply-all"></i>Make another Video</button>
+      </form>
+      <form>
+        <a type="button" class="btn btn-danger" style="margin-left: 50px;">Send Video</a>
+      </form>   -->
+
+
+
+
+
+
+
+{% endblock content %}

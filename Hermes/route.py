@@ -28,6 +28,7 @@ import random
 import uuid
 from collections import OrderedDict
 from odict import odict
+from datetime import datetime
 
 
 # added
@@ -267,9 +268,10 @@ def sendMessage(id):
 			# print (file_hash.hexdigest()) # debugging
 
 			timestamp = calendar.timegm(time.gmtime())
+			dt_object = datetime.fromtimestamp(timestamp)
 			# Uploads to firebase
-			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
-			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(timestamp) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
+			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
+			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
 			
 			
 			# temp = putVideo.json() # converts to json
@@ -325,6 +327,20 @@ def inbox():
 			messages = db.child("Messages").child(current_userId).child(senderId).child(messageId).get()
 			
 			data[messageId] = dict(messages.val())
-	print(data)	
+	# print(data)	
 		
-	return render_template('inboxPage.html', messages=data.values(), messageKeys = data.keys())
+	return render_template('inboxPage.html', messages=data)
+
+
+@app.route('/watchVideoMessage/s=<senderId>%M=<msgId>', methods = ['GET', 'POST'])
+# @login_required
+def watchVideoMessage(senderId, msgId):
+	
+	current_userId = current_user.get_id()
+	reiceivedMessage = db.child("Messages").child(current_userId).child(senderId).order_by_key().equal_to(msgId).limit_to_first(1).get()
+	
+	
+	
+			
+	
+	return render_template('watchVideoMessagePage.html', videoMessage = reiceivedMessage)
