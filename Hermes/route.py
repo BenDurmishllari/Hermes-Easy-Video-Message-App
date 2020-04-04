@@ -189,7 +189,7 @@ def audiovideo():
 	if request.method == 'POST':
 		file = request.files['video']
 		filename = str(uid) + ".mp4"
-		#filename = "myaudiovideo.mp4"
+		# filename = "myaudiovideo.mp4"
 		filename = secure_filename(filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 	return "success"
@@ -303,6 +303,9 @@ def sendMessage(id):
 			
 
 			return redirect(url_for('watchVideo'))
+		
+		if 'btnBackChooseOtherUser' in request.form:
+			return redirect(url_for('users'))
 			
 	
 	return render_template('sendMessagePage.html', receiver = receiver )
