@@ -73,6 +73,14 @@ function closeModal() {
     document.getElementById('fade').style.display = 'none';
 }
 
+function btnStopVisiblity(x)
+{
+    if (x == 0)
+    {
+        document.getElementById('btnStop').style.visibility = 'visible';
+    }
+}
+
 navigator.mediaDevices.getUserMedia(constraintObj)
 .then(function(mediaStreamObj) {
     //connect the media stream to the first video element
@@ -103,6 +111,7 @@ navigator.mediaDevices.getUserMedia(constraintObj)
     start.addEventListener('click', (ev)=>{
         mediaRecorder.start();
         video.play();
+        
         // var counter = 300;
 
         // setInterval(function() {

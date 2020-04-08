@@ -12,8 +12,8 @@
             <h1>Inbox</h1>
         </div>
        
-            <div class="card-body msg_card_body" style="height:800px;border:solid 2px orange;overflow:scroll;overflow-x:hidden;overflow-y:scroll;">
-                {% for k,v in messages.items() %}    
+            <div class="card-body msg_card_body" style="height:800px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;">
+                {% for k,v in messages.items() | sort(attribute='1.timestamp', reverse = True) %}    
                     <a id="inboxLink" href="/watchVideoMessage/s={{ v.sender_id }}%M={{ k }}">
                         <div class="row msg_container base_receive" id="inboxDiv">
                             <div class="col-md-2 col-xs-2 avatar">
@@ -21,16 +21,24 @@
                             </div>
                             <div class="col-md-10 col-xs-10">
                                 <div class="messages msg_receive">
-                                    <h4 class="card-title">{{ v.sender_name }}</h4>
-                                    <p class="card-text">Email: </p>
-                                    <p class="card-text"><small class="text-muted">{{ v.created_at }}</small></p>
+                                    
+                                    <p class="card-text">Sender: {{ v.sender_name }} </p>
+                                    <p class="card-text">Sender Email: {{ v.sender_email }} </p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p class="card-text"><small class="text-muted">Date: {{ v.timestamp[0:16] }}</small></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p class="card-text"><small class="text-muted" style="float: right;">Time: {{ v.timestamp[16:22] }}{{ v.timestamp[25:] }}</small></p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </a>
                 {% endfor %}
             </div>
-      
     </div>
 </dic>
 
@@ -43,7 +51,7 @@
         {% endfor %}
 </div> -->
 
-
+<!-- |sort(attribute='1.timestamp', reverse = True) -->
 
 {% endblock content %}
 

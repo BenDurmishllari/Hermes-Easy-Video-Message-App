@@ -172,11 +172,15 @@ def watchVideo():
 			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(uid) + ".mp4"))
 			
 			return redirect(url_for('recordVideo'))
-	
-	if request.method == 'POST':
+		
 		if 'btnSendVideo' in request.form:
 		
 			return redirect(url_for('users'))
+	
+	# if request.method == 'POST':
+	# 	if 'btnSendVideo' in request.form:
+		
+	# 		return redirect(url_for('users'))
 			
 	return render_template('watchVideoPage.html', current_video = current_video)
 
@@ -248,10 +252,12 @@ def sendMessage(id):
 	receiver = db.child("Users").order_by_key().equal_to(id).limit_to_first(1).get()
 	current_userId = current_user.get_id()
 	current_userName = current_user.get_username()
+	current_userEmail = current_user.get_email()
 	current_video = "./Hermes/static/uploadVideos/" + str(current_userId) + ".mp4"
 	senderImageUrl = db.child("Users").child(current_userId).get().val().get('profile_image')
 	
-	
+
+
 	for r in receiver:
 		receiverId = r.val().get('id')
 	
@@ -265,10 +271,14 @@ def sendMessage(id):
 					print 
 					file_hash.update(chunk)
 			print (file_hash.digest()) #video that its on server
-			# print (file_hash.hexdigest()) # debugging
+			print (file_hash.hexdigest()) # debugging
 
 			timestamp = calendar.timegm(time.gmtime())
-			dt_object = datetime.fromtimestamp(timestamp)
+			# dt_object = datetime.fromtimestamp(timestamp)
+			dt_object = time.strftime("%a, %d %b %Y %I:%M:%S %p", time.localtime(timestamp))
+			# date = time.strftime("%a, %d %b %Y", time.localtime(timestamp))
+			# timeSt = time.strftime("%I:%M %p", time.localtime(timestamp))
+		
 			# Uploads to firebase
 			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
 			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
@@ -289,10 +299,19 @@ def sendMessage(id):
 			print("-----serverPrejson")
 			print(putVideo)
 
+			# data = {"sender_id": current_userId,
+			# 		"receiver_id": receiverId,
+			# 		"sender_name": current_userName,
+			# 		"date": str(date),
+			# 		"time": str(timeSt),
+			# 		"message_body": getVideoUrl,
+			# 		"profile_image": senderImageUrl}
+
 			data = {"sender_id": current_userId,
 					"receiver_id": receiverId,
 					"sender_name": current_userName,
-					"created_at": timestamp,
+					"sender_email": current_userEmail,
+					"timestamp": dt_object, 
 					"message_body": getVideoUrl,
 					"profile_image": senderImageUrl}
 			
@@ -300,9 +319,9 @@ def sendMessage(id):
 			createMessage = db.child("Messages").child(receiverId).child(current_userId).child().push(data)
 			print(createMessage)
 
-			
+			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(current_userId) + ".mp4"))
 
-			return redirect(url_for('watchVideo'))
+			return redirect(url_for('home'))
 		
 		if 'btnBackChooseOtherUser' in request.form:
 			return redirect(url_for('users'))
@@ -330,7 +349,11 @@ def inbox():
 			messages = db.child("Messages").child(current_userId).child(senderId).child(messageId).get()
 			
 			data[messageId] = dict(messages.val())
-	# print(data)	
+			
+	
+		print(data)
+		
+	
 		
 	return render_template('inboxPage.html', messages=data)
 
@@ -342,7 +365,13 @@ def watchVideoMessage(senderId, msgId):
 	current_userId = current_user.get_id()
 	reiceivedMessage = db.child("Messages").child(current_userId).child(senderId).order_by_key().equal_to(msgId).limit_to_first(1).get()
 	
+	if request.method == 'POST':
+		if 'btnBackInbox' in request.form:
+			return redirect(url_for('inbox'))
+		if 'btnBackMainMenu' in request.form:
+			return redirect(url_for('home'))
 	
+
 	
 			
 	
