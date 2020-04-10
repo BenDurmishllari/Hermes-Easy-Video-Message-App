@@ -13,31 +13,35 @@
         </div>
        
             <div class="card-body msg_card_body" style="height:800px;overflow:scroll;overflow-x:hidden;overflow-y:scroll;">
-                {% for k,v in messages.items() | sort(attribute='1.timestamp', reverse = True) %}    
-                    <a id="inboxLink" href="/watchVideoMessage/s={{ v.sender_id }}%M={{ k }}">
-                        <div class="row msg_container base_receive" id="inboxDiv">
-                            <div class="col-md-2 col-xs-2 avatar">
-                                <img  height="150px" width="auto" id="imgInbox" src="{{ v.profile_image }}" class=" img-responsive ">
-                            </div>
-                            <div class="col-md-10 col-xs-10">
-                                <div class="messages msg_receive">
-                                    
-                                    <p class="card-text">Sender: {{ v.sender_name }} </p>
-                                    <p class="card-text">Sender Email: {{ v.sender_email }} </p>
-                                    
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p class="card-text"><small class="text-muted">Date: {{ v.timestamp[0:16] }}</small></p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p class="card-text"><small class="text-muted" style="float: right;">Time: {{ v.timestamp[16:22] }}{{ v.timestamp[25:] }}</small></p>
+                {% if messages %}
+                    {% for k,v in messages.items() | sort  | reverse %}    
+                        <a id="inboxLink" href="/watchVideoMessage/s={{ v.sender_id }}%M={{ k }}">
+                            <div class="row msg_container base_receive" id="inboxDiv">
+                                <div class="col-md-2 col-xs-2 avatar">
+                                    <img  height="150px" width="auto" id="imgInbox" src="{{ v.profile_image }}" class=" img-responsive ">
+                                </div>
+                                <div class="col-md-10 col-xs-10">
+                                    <div class="messages msg_receive">
+                                        
+                                        <p class="card-text">Sender: {{ v.sender_name }} </p>
+                                        <p class="card-text">Sender Email: {{ v.sender_email }} </p>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="card-text"><small class="text-muted">Date: {{ v.timestamp[0:16] }}</small></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="card-text"><small class="text-muted" style="float: right;">Time: {{ v.timestamp[16:22] }}{{ v.timestamp[25:] }}</small></p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                {% endfor %}
+                        </a>
+                    {% endfor %}
+                {% else %}
+                        <h1 align="center" style="padding-top: 90px;">{{ noMsg }} </h1>
+                {% endif %}
             </div>
     </div>
 </dic>

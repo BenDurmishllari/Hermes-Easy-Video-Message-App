@@ -14,8 +14,41 @@
     <title>Login</title>
 </head>
 <body>
+  
+  
+  <!-- <main role="main" class="container">
+    <div class="row">
+      <div class="col" style="text-align: center;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}" >
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </div>
+  </main> -->
+  <div class="row">
+    <div class="col" style="padding-left: 700px; padding-right: 700px;">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" style="text-align: center;">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+
+
 
     <div class="wrapper fadeInDown">
+      
         <div id="formContent">
           <!-- Tabs Titles -->
       

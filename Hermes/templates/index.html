@@ -58,7 +58,9 @@
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="{{ url_for('home') }}" style="border-right: 3px solid #E97C09;border-left: 3px solid  #E97C09;height: 40px;">Home</a>
               <!-- <a class="nav-item nav-link" href="/about">About</a> -->
-              <a class="nav-item nav-link" href="{{ url_for('createAccount') }}" style="border-right: 3px solid  #E97C09;height: 40px;">Create Account</a>
+              {% if current_user.get_role() == 'Admin' %}
+                <a class="nav-item nav-link" href="{{ url_for('createAccount') }}" style="border-right: 3px solid  #E97C09;height: 40px;">Create Account</a>
+              {% endif %}
               <!-- <a class="nav-item nav-link" href="">Users</a> -->
               <!-- <a class="nav-item nav-link" href="">Watch Video</a> -->
             </div>
@@ -78,10 +80,16 @@
           1 of 3
         </div> -->
           <div id="colCenter" class="col-xl">
-            
-            {% block content %}
-            
-            {% endblock %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}" style="text-align: center;">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
           </div>
         <!-- <div id="colRight" class="col">
           3 of 3

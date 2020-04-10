@@ -4,6 +4,7 @@
 
 <div class="card-deck">
     {% for user in users %}
+        {% if current_user.get_id() != user.id %}
             <div class="col-sm-4">
                 <a href="/sendMessage/{{ user.id }}">
                     <div class="card mb-2" style="width: 19rem;">
@@ -16,6 +17,7 @@
                     </div> 
                 </a> 
             </div>
+        {% endif %}
     {% endfor %}
 </div>
 
