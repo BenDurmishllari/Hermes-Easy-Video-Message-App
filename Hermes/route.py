@@ -326,28 +326,27 @@ def sendMessage(id):
 					print 
 					file_hash.update(chunk)
 			print (file_hash.digest()) #video that its on server
-			print (file_hash.hexdigest()) # debugging
+			# print (file_hash.hexdigest()) # debugging
 
 			timestamp = calendar.timegm(time.gmtime())
-			# dt_object = datetime.fromtimestamp(timestamp)
 			dt_object = time.strftime("%a, %d %b %Y %I:%M:%S %p", time.localtime(timestamp))
-			# date = time.strftime("%a, %d %b %Y", time.localtime(timestamp))
-			# timeSt = time.strftime("%I:%M %p", time.localtime(timestamp))
+			
 		
 			# Uploads to firebase
 			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
 			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
 			
+			serverFile = file_hash.digest()
 			
-			# temp = putVideo.json() # converts to json
-			
-			# print(temp["md5Hash"]) 
-			# base64dec = base64.b64decode(temp["md5Hash"])
-			
-			# if base64dec == file_hash.digest():
-			# 	print("The files are the same")
+			firebaseStorageFile_Md5Hash = putVideo.get('md5Hash')
+
+			firebaseStorageFile_digest = base64.b64decode(firebaseStorageFile_Md5Hash)
+
+			# if serverFile == firebaseStorageFile_digest:
+			# 	print("file upload success")
 			# else:
-			# 	print("ERROR FILES NOT THE SAME")
+			# 	print("error")
+
 
 			data = {"sender_id": current_userId,
 					"receiver_id": receiverId,
@@ -357,10 +356,8 @@ def sendMessage(id):
 					"message_body": getVideoUrl,
 					"profile_image": senderImageUrl}
 			
-			#createMessage = db.child("Messages").child(current_userId + "_" + receiverId).child().push(data)
 			createMessage = db.child("Messages").child(receiverId).child(current_userId).child().push(data)
-			print(createMessage)
-
+	
 			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(current_userId) + ".mp4"))
 
 			flash('Video Message has been send it successfully', 'success')
