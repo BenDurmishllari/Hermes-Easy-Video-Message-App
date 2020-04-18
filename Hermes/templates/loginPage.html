@@ -54,14 +54,18 @@
       
           <!-- Icon -->
           <div class="fadeIn first">
-            <img src="{{url_for('static', filename='logo/man.png')}}" id="icon" alt="User Icon" />
+            <img src="{{url_for('static', filename='logo/hermes logo.png')}}" id="icon" alt="User Icon" />
           </div>
       
           <!-- Login Form -->
           <form method="POST" action="" name="LogIn">
             <input type="text" id="login" class="fadeIn second" name="LogInFormEmail" placeholder="Email">
             <input type="text" id="password" class="fadeIn third" name="LogInFormPassword" placeholder="Password">
+            <div class="custom-control custom-checkbox">
+              <label style="padding-right: 540px;" ><input id="rememberme" name="rememberme" value="remember" type="checkbox" /> &nbsp;Remember me</label>       
+            </div> 
             <input type="submit" class="fadeIn fourth" value="Log In">
+            
           </form>
       
           <!-- Remind Passowrd -->

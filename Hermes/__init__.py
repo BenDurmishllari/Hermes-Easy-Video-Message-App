@@ -40,7 +40,10 @@ db = firebase.database()
 
 storage = firebase.storage()
 
-
+# path_on_cloud = "videos"
+# path_on_local = "./Hermes/static/uploadVideos/cPpoCCXnIvcAlZiTpWPoDlr5idY2.mp4"
+# storage.child(path_on_cloud).put(path_on_local)
+# vide_url = storage.child(path_on_cloud).get_url()
 
 from Hermes import route, models
 from Hermes.models import User

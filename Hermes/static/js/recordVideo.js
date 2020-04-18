@@ -161,24 +161,26 @@ navigator.mediaDevices.getUserMedia(constraintObj)
         
         // Execute the ajax request, in this case we have a very simple PHP script
         // that accepts and save the uploaded "video" file
-        xhr('/recordVideo', formData, function (fName) {
+        xhr('/recordVideo', formData, function (fName)
+        {
             console.log("Video succesfully uploaded !");
             window.location.href = "/watchVideo"; 
         });
 
         // Helper function to send 
-        function xhr(url, data, callback) {
+        function xhr(url, data, callback) 
+        {
             var request = new XMLHttpRequest();
-            request.onreadystatechange = function () {
-                if (request.readyState == 4 && request.status == 200) {
+            request.onreadystatechange = function () 
+            {
+                if (request.readyState == 4 && request.status == 200) 
+                {
                     callback(location.href + request.responseText);
                 }
                
             };
             request.open('POST', url);
             request.send(data);
-            
-            
         }
         
     }

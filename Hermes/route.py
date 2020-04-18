@@ -38,9 +38,6 @@ import hashlib
 import base64
 
 
-
-
-
 @login_manager.user_loader
 def load_user(user_id):
     
@@ -133,7 +130,7 @@ def login():
 							id = gc.val().get('id'),
 							profile_image = gc.val().get('profile_image'))
 				
-				login_user(user)
+				login_user(user, remember = True)
 				print(current_user)
 				
 				next_page = request.args.get('next')
@@ -285,7 +282,7 @@ def createAccount():
 		
 		except:
 			
-			flash('Something was wrong, try again please', 'success')
+			flash('Something was wrong, try again please', 'danger')
 			return render_template('createAccountPage.html')
 
 	return render_template('createAccountPage.html')
@@ -318,56 +315,111 @@ def sendMessage(id):
 	
 	if request.method == 'POST':
 		if 'btnSendMessage' in request.form:
-			
-			
+
 			with open(current_video, "rb") as f:
 				file_hash = hashlib.md5()
 				for chunk in iter(lambda: f.read(8192), b''): 
 					print 
 					file_hash.update(chunk)
 			print (file_hash.digest()) #video that its on server
-			# print (file_hash.hexdigest()) # debugging
-
+				# print (file_hash.hexdigest()) # debugging
+	
 			timestamp = calendar.timegm(time.gmtime())
 			dt_object = time.strftime("%a, %d %b %Y %I:%M:%S %p", time.localtime(timestamp))
-			
+
+			try:
+				# Uploads to firebase
+				putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
+				getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
+				serverFile = file_hash.digest()
+				firebaseStorageFile_Md5Hash = putVideo.get('md5Hash')
+				firebaseStorageFile_digest = base64.b64decode(firebaseStorageFile_Md5Hash)
+
+
+				data = {"sender_id": current_userId,
+						"receiver_id": receiverId,
+						"sender_name": current_userName,
+						"sender_email": current_userEmail,
+						"timestamp": dt_object, 
+						"message_body": getVideoUrl,
+						"profile_image": senderImageUrl}
+
+				createMessage = db.child("Messages").child(receiverId).child(current_userId).child().push(data)
+
+				current_message_dbTable_ID = createMessage.get('name')
 		
-			# Uploads to firebase
-			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).put(current_video)
-			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(receiverId)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(receiverId)).get_url(str(current_userId) + "_" + str(receiverId))
-			
-			serverFile = file_hash.digest()
-			
-			firebaseStorageFile_Md5Hash = putVideo.get('md5Hash')
+				if serverFile == firebaseStorageFile_digest:
+					os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(current_userId) + ".mp4"))
+					print("13")
+					flash('Video Message has been send it successfully', 'success')
+					return redirect(url_for('home'))
+				else:
+					pass
+					# return redirect(url_for('resendMessage', receiver_id = receiverId))
+			except:
+				return redirect(url_for('resendMessage', receiver_id = receiverId))
+				
 
-			firebaseStorageFile_digest = base64.b64decode(firebaseStorageFile_Md5Hash)
-
-			# if serverFile == firebaseStorageFile_digest:
-			# 	print("file upload success")
-			# else:
-			# 	print("error")
-
-
-			data = {"sender_id": current_userId,
-					"receiver_id": receiverId,
-					"sender_name": current_userName,
-					"sender_email": current_userEmail,
-					"timestamp": dt_object, 
-					"message_body": getVideoUrl,
-					"profile_image": senderImageUrl}
-			
-			createMessage = db.child("Messages").child(receiverId).child(current_userId).child().push(data)
-	
-			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(current_userId) + ".mp4"))
-
-			flash('Video Message has been send it successfully', 'success')
-			return redirect(url_for('home'))
 		
 		if 'btnBackChooseOtherUser' in request.form:
 			return redirect(url_for('users'))
 			
 	
 	return render_template('sendMessagePage.html', receiver = receiver )
+
+@app.route('/resendMessage%r=<receiver_id>', methods = ['GET', 'POST'])
+# @login_required
+def resendMessage(receiver_id):
+	
+	current_userId = current_user.get_id()
+	current_userName = current_user.get_username()
+	current_userEmail = current_user.get_email()
+	current_video = "./Hermes/static/uploadVideos/" + str(current_userId) + ".mp4"
+	replay_video = "./static/uploadVideos/" + str(current_userId) + ".mp4"
+	senderImageUrl = db.child("Users").child(current_userId).get().val().get('profile_image')
+	receiverId = db.child("Users").order_by_key().equal_to(receiver_id).limit_to_first(1).get()
+
+	for r in receiverId:
+		r_Id = r.val().get('id')
+
+	if request.method == 'POST':
+		if 'btnResendMessage' in request.form:
+
+			timestamp = calendar.timegm(time.gmtime())
+			dt_object = time.strftime("%a, %d %b %Y %I:%M:%S %p", time.localtime(timestamp))
+
+			
+			# Uploads to firebase
+			putVideo = storage.child("Videos/" + str(current_userId) + "_" + str(r_Id)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(r_Id)).put(current_video)
+			getVideoUrl = storage.child("Videos/" + str(current_userId) + "_" + str(r_Id)).child(str(dt_object) + "/" + str(current_userId) + "_" + str(r_Id)).get_url(str(current_userId) + "_" + str(r_Id))
+
+			data = {"sender_id": current_userId,
+					"receiver_id": r_Id,
+					"sender_name": current_userName,
+					"sender_email": current_userEmail,
+					"timestamp": dt_object, 
+					"message_body": getVideoUrl,
+					"profile_image": senderImageUrl}
+
+			createMessage = db.child("Messages").child(r_Id).child(current_userId).child().push(data)
+			flash('Video Message has been send it successfully', 'success')
+			return redirect(url_for('home'))
+
+	# q = "-M5-GjWImIokXaEFVfOC"
+	# v = db.child("Messages").child("D2jDotkXctdhhNejE1sr43GvfXi2").child("cPpoCCXnIvcAlZiTpWPoDlr5idY2").get()
+	# l = []
+	# for s in v:
+	# 	msgId = s.key()
+	# 	l.append(msgId)
+	# for i in l:
+	# 	if q not in l:
+	# 		print("dont exist")
+	# 	else:
+	# 		print("exist")
+		
+
+	
+	return render_template('emergencyMessagePage.html', pending_video = replay_video)
 
 
 @app.route('/inbox', methods = ['GET', 'POST'])

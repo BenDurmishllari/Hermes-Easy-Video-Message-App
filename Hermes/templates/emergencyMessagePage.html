@@ -1,0 +1,48 @@
+{% extends "index.html" %}  
+{% block content %}
+
+
+
+
+
+    <div  class="card text-center">
+      <div class="card-header" style="background-color: rgba(211, 211, 211, 0.605);">
+        <h3 style="color: rgb(230, 15, 36);">Sending Video Message Failed</h3>
+        <h3 style="color: rgb(230, 15, 36)">Video Message Still Pending. Do you still want to send it to {{ current_user.get_username() }}?</h3>
+      </div>
+      <div  class="card-body">
+        <form method="GET">
+          <video class="afterglow" id="myvideo"  width="1080" height="620" controls>
+            <source src="{{ pending_video }}" type="video/mp4"/>
+          </video>
+        </form>
+      </div>
+      <div class="card-footer text-muted">
+        <div class="container">
+          <div class="row">
+            <div class="col">
+              <form method="POST" action="">
+                <button name="btnBackChooseOtherUser" type="submit" class="btn btn-danger" style="height: 50px; width: 300px;font-size: 30px;"><i class="fa fa-times" aria-hidden="true"></i> NO</button>
+              </form> 
+            </div>
+            <div class="col" >
+              <form method="POST" action="">
+                <button name="btnResendMessage" type="submit" class="btn btn-success" style="height: 50px; width: 300px;font-size: 30px;"><i class="fa fa-check" aria-hidden="true"></i> YES</button>
+              </form>   
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+     
+
+
+
+
+
+
+{% endblock content %}
