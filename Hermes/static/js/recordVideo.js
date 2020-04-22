@@ -39,28 +39,6 @@ if (navigator.mediaDevices === undefined) {
     })
 }
 
-// document.getElementById('timer').innerHTML = 001 + ":" + 00;
-//     //startTimer();
-
-//     function startTimer() {
-//     var presentTime = document.getElementById('timer').innerHTML;
-//     var timeArray = presentTime.split(/[:]+/);
-//     var m = timeArray[0];
-//     var s = checkSecond((timeArray[1] - 1));
-//     if(s==59){m=m-1}
-//     if(m<0){alert('timer completed')}
-    
-//     document.getElementById('timer').innerHTML =
-//         m + ":" + s;
-//     console.log(m)
-//     setTimeout(startTimer, 1000);
-//     }
-
-//     function checkSecond(sec) {
-//     if (sec < 10 && sec >= 0) {sec = "0" + sec}; // add zero in front of numbers < 10
-//     if (sec < 0) {sec = "59"};
-//     return sec;
-// }
 
 
 function openModal() {
@@ -80,6 +58,15 @@ function btnStopVisiblity(x)
         document.getElementById('btnStop').style.visibility = 'visible';
     }
 }
+
+// function malakia(){
+//     let send = document.getElementById('btnMsg');
+
+//     send.addEventListener('click', (ev) => {
+//         openModal();
+//     });
+// }
+
 
 navigator.mediaDevices.getUserMedia(constraintObj)
 .then(function(mediaStreamObj) {
@@ -108,28 +95,31 @@ navigator.mediaDevices.getUserMedia(constraintObj)
 
   
     
+
     start.addEventListener('click', (ev)=>{
         mediaRecorder.start();
         video.play();
         
-        // var counter = 300;
+        var counter = 300;
+        
+        setInterval(function() {
+        counter--;
+        var realTime = parseInt(counter / 60) + ':' + (counter % 60);
+        if (counter >= 0) 
+        {
+            span = document.getElementById("count");
+            span.innerHTML = realTime;
+        }
 
-        // setInterval(function() {
-        // counter--;
-        // if (counter >= 0) 
-        // {
-        //     span = document.getElementById("count");
-        //     span.innerHTML = counter;
-        // }
+        if (counter === 0) 
+        {
+            mediaRecorder.stop();
+            //alert('Video Record Finish!');
+            clearInterval(counter);
+            openModal();
+        }
 
-        // if (counter === 0) 
-        // {
-        //     mediaRecorder.stop();
-        //     //alert('Video Record Finish!');
-        //     clearInterval(counter);
-        // }
-
-        // }, 1000);
+        }, 1000);
         
         console.log(mediaRecorder.state);
     })
@@ -139,7 +129,7 @@ navigator.mediaDevices.getUserMedia(constraintObj)
         //alert('Video Record Stopped!');
         //clearInterval(counter);
         console.log(mediaRecorder.state);
-        document.getElementById('results').innerHTML = '';
+        //document.getElementById('results').innerHTML = '';
         openModal();
     });
     mediaRecorder.ondataavailable = function(ev) {

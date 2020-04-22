@@ -2,7 +2,11 @@
 {% block content %}
 
 
-
+<script src="{{url_for('static', filename='js/recordVideo.js')}}"></script>
+<div id="fade"></div>
+<div id="modal" class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+</div>
 
 {% for r in receiver %}
     <div  class="card text-center">
@@ -23,7 +27,7 @@
             </div>
             <div class="col" >
               <form method="POST" action="">
-                <button name="btnSendMessage" type="submit" class="btn btn-danger" style="height: 50px; width: 300px;font-size: 30px;">Send Message</button>
+                <button id="btnMsg" name="btnSendMessage" type="submit" class="btn btn-danger" style="height: 50px; width: 300px;font-size: 30px;">Send Message</button>
               </form>   
             </div>
           </div>
