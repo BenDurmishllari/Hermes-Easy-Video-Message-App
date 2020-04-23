@@ -20,6 +20,9 @@ from flask_login import (login_user,
 from Hermes.models import User
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from collections import OrderedDict
+from odict import odict
+from datetime import datetime
 from functools import wraps
 import os
 import json
@@ -28,14 +31,12 @@ import calendar
 import time
 import random
 import uuid
-from collections import OrderedDict
-from odict import odict
-from datetime import datetime
-
-
-# added
 import hashlib
 import base64
+
+
+
+
 
 
 @login_manager.user_loader
@@ -76,39 +77,6 @@ def login():
 	
 	if current_user.is_authenticated:
 		return redirect(url_for('home'))
-
-	# if request.method == "POST":
-		
-
-	# 	email = request.form["LogInFormEmail"]
-	# 	password = request.form["LogInFormPassword"]
-		
-	# 	loginUser = auth.sign_in_with_email_and_password(email, password)
-		
-	# 	user_id = loginUser['localId']
-	# 	uEmailToken = loginUser['email']
-		
-	# 	getCurrentDB = db.child("Users").order_by_key().equal_to(user_id).limit_to_first(1).get()
-		
-	# 	if getCurrentDB != None:
-
-	# 		for gc in getCurrentDB.each():
-	# 			user = User(username = gc.val().get('username'),
-	# 					    email = gc.val().get('email'), 
-	# 						role = gc.val().get('role'), 
-	# 						id = gc.val().get('id'),
-	# 						profile_image = gc.val().get('profile_image'))
-		
-			
-	# 		login_user(user)
-	# 		print(current_user)
-			
-	# 		next_page = request.args.get('next')
-	# 		return redirect(next_page) if next_page else redirect(url_for('home'))
-	# 	else:
-	# 		flash('Login Unsuccessful. Please check username and password', 'danger')
-	# 	return redirect(url_for('login'))
-	# else:
 			
 	if request.method == 'POST':
 		
@@ -145,11 +113,11 @@ def login():
 
 #logout route
 @app.route("/logout")
+@login_required
 def logout():
 
 	logout_user()
-	
-	
+
 	return redirect(url_for('login'))
 	
    
@@ -166,7 +134,7 @@ def home():
 	return render_template('homePage.html')
 
 @app.route('/createVideo', methods=['GET','POST'])
-# @login_required
+@login_required
 def recordVideo():
 
 	return render_template('createVideoPage.html')
@@ -174,23 +142,14 @@ def recordVideo():
 
 
 @app.route('/watchVideo', methods=['GET','POST'])
-# @login_required
+@login_required
 def watchVideo():
 	
 	uid = current_user.get_id()
 	ts = calendar.timegm(time.gmtime())
 	 
 	current_video = "./static/uploadVideos/" + str(uid) + ".mp4"
-	# characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'
-	# result = ''
-	# for i in range(0, 11):
-	# 	result += random.choice(characters)	
-
-	# if request.method == 'GET':
-		
-	# 	return redirect(url_for('watchVideo',result=result))
-
-
+	
 	if request.method == 'POST':
 		if 'btnMakeOtherVideo' in request.form:
 			os.remove(os.path.join(app.config['UPLOAD_FOLDER'], str(uid) + ".mp4"))
@@ -200,16 +159,12 @@ def watchVideo():
 		if 'btnSendVideo' in request.form:
 		
 			return redirect(url_for('users'))
-	
-	# if request.method == 'POST':
-	# 	if 'btnSendVideo' in request.form:
-		
-	# 		return redirect(url_for('users'))
-			
+
 	return render_template('watchVideoPage.html', current_video = current_video)
 
 
 @app.route('/recordVideo',methods = ['GET','POST'])
+@login_required
 def audiovideo():
 	uid = current_user.get_id()
 	ts = calendar.timegm(time.gmtime())
@@ -217,17 +172,13 @@ def audiovideo():
 	if request.method == 'POST':
 		file = request.files['video']
 		filename = str(uid) + ".mp4"
-		# filename = "myaudiovideo.mp4"
 		filename = secure_filename(filename)
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 	return "success"
 	
 
-
-
-
 @app.route('/createAccount', methods = ['GET', 'POST'])
-# @login_required
+@login_required
 def createAccount():
 
 	if current_user.get_role() != 'Admin':
@@ -243,24 +194,6 @@ def createAccount():
 		pic_file = request.files['userProfilePic']
 		profile_pic = pic_file.read()
 
-			
-		# user = auth.create_user_with_email_and_password(email, password)
-		# currentUserId = user['localId']
-		# currentUserEmail = user['email']
-		
-		# put_pic = storage.child("profile_pic/" + str(currentUserEmail)).child(str(currentUserId)).put(profile_pic)
-		# #getCurrentPic = storage.child("profile_pic/" + str(currentUserEmail)).get_url(currentUserId)
-		# getCurrentPic = storage.child("profile_pic/" + str(currentUserEmail) + "/" + str(currentUserId)).get_url(str(currentUserId))
-		# data = {"username": username, 
-		# 		"email": email, 
-		# 		"role": role, 
-		# 		"id": currentUserId, 
-		# 		"profile_image": getCurrentPic}
-		
-		# createUserRef = db.child("Users").child(currentUserId).set(data)
-		# flash('Account has been created', 'success')
-		# return redirect(url_for('home'))
-
 		try:
 			
 			user = auth.create_user_with_email_and_password(email, password)
@@ -268,7 +201,6 @@ def createAccount():
 			currentUserEmail = user['email']
 		
 			put_pic = storage.child("profile_pic/" + str(currentUserEmail)).child(str(currentUserId)).put(profile_pic)
-			#getCurrentPic = storage.child("profile_pic/" + str(currentUserEmail)).get_url(currentUserId)
 			getCurrentPic = storage.child("profile_pic/" + str(currentUserEmail) + "/" + str(currentUserId)).get_url(str(currentUserId))
 			data = {"username": username, 
 					"email": email, 
@@ -288,17 +220,21 @@ def createAccount():
 	return render_template('createAccountPage.html')
 
 @app.route('/users', methods = ['GET', 'POST'])
-# @login_required
+@login_required
 def users():
 
-	cUser = current_user.get_id()
-	users = db.child("Users").get().val().values()
-	print(users)
+	try:
+		cUser = current_user.get_id()
+		users = db.child("Users").get().val().values()
+		print(users)
+	except:
+		flash('No Registered Users', 'danger')
+		return redirect(url_for('home'))
 	
 	return render_template('usersPage.html',users = users)
 
 @app.route('/sendMessage/<id>', methods = ['GET', 'POST'])
-# @login_required
+@login_required
 def sendMessage(id):
 
 	receiver = db.child("Users").order_by_key().equal_to(id).limit_to_first(1).get()
@@ -308,7 +244,6 @@ def sendMessage(id):
 	current_video = "./Hermes/static/uploadVideos/" + str(current_userId) + ".mp4"
 	senderImageUrl = db.child("Users").child(current_userId).get().val().get('profile_image')
 	
-
 
 	for r in receiver:
 		receiverId = r.val().get('id')
@@ -322,7 +257,7 @@ def sendMessage(id):
 					print 
 					file_hash.update(chunk)
 			print (file_hash.digest()) #video that its on server
-				# print (file_hash.hexdigest()) # debugging
+				
 	
 			timestamp = calendar.timegm(time.gmtime())
 			dt_object = time.strftime("%a, %d %b %Y %I:%M:%S %p", time.localtime(timestamp))
@@ -354,8 +289,7 @@ def sendMessage(id):
 					flash('Video Message has been send it successfully', 'success')
 					return redirect(url_for('home'))
 				else:
-					pass
-					# return redirect(url_for('resendMessage', receiver_id = receiverId))
+					return redirect(url_for('resendMessage', receiver_id = receiverId))
 			except:
 				return redirect(url_for('resendMessage', receiver_id = receiverId))
 				
@@ -368,7 +302,7 @@ def sendMessage(id):
 	return render_template('sendMessagePage.html', receiver = receiver )
 
 @app.route('/resendMessage%r=<receiver_id>', methods = ['GET', 'POST'])
-# @login_required
+@login_required
 def resendMessage(receiver_id):
 	
 	current_userId = current_user.get_id()
@@ -405,25 +339,11 @@ def resendMessage(receiver_id):
 			flash('Video Message has been send it successfully', 'success')
 			return redirect(url_for('home'))
 
-	# q = "-M5-GjWImIokXaEFVfOC"
-	# v = db.child("Messages").child("D2jDotkXctdhhNejE1sr43GvfXi2").child("cPpoCCXnIvcAlZiTpWPoDlr5idY2").get()
-	# l = []
-	# for s in v:
-	# 	msgId = s.key()
-	# 	l.append(msgId)
-	# for i in l:
-	# 	if q not in l:
-	# 		print("dont exist")
-	# 	else:
-	# 		print("exist")
-		
-
-	
 	return render_template('emergencyMessagePage.html', pending_video = replay_video)
 
 
 @app.route('/inbox', methods = ['GET', 'POST'])
-# @login_required
+@login_required
 def inbox():
 	
 	current_userId = current_user.get_id()
@@ -454,7 +374,7 @@ def inbox():
 
 
 @app.route('/watchVideoMessage/s=<senderId>%M=<msgId>', methods = ['GET', 'POST'])
-# @login_required
+@login_required
 def watchVideoMessage(senderId, msgId):
 	
 	current_userId = current_user.get_id()

@@ -4,15 +4,9 @@ let constraintObj = {
         facingMode: "user", 
         width: { min: 640, ideal: 1280, max: 1920 },
         height: { min: 480, ideal: 720, max: 1080 } 
-        
-        //default
-        //width: { min: 640, ideal: 1280, max: 1920 },
-        //height: { min: 480, ideal: 720, max: 1080 } 
     } 
 }; 
-// width: 1280, height: 720  -- preference only
-// facingMode: {exact: "user"}
-// facingMode: "environment"
+
 
 //handle older browsers that might implement getUserMedia in some way
 if (navigator.mediaDevices === undefined) {
@@ -59,13 +53,7 @@ function btnStopVisiblity(x)
     }
 }
 
-// function malakia(){
-//     let send = document.getElementById('btnMsg');
 
-//     send.addEventListener('click', (ev) => {
-//         openModal();
-//     });
-// }
 
 
 navigator.mediaDevices.getUserMedia(constraintObj)

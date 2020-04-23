@@ -10,12 +10,6 @@
           Watch Video
         </div>
         <div  class="card-body">
-            <!-- <video id="vid2" controls  width="1080" height="620" ></video> -->
-            <!-- <video autoplay loop width="1080" height="620" controls> -->
-                <!-- <source src={{ url_for('static', filename="./uploadVideos/myaudiovideo.mp4") }} type="video/mp4"> -->
-                  <!-- <source src="./static/uploadVideos/myaudiovideo.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video> -->
             {% for m in videoMessage %}
               <form method="GET">
                 <video class="afterglow" id="myvideo"  width="1080" height="620" controls>
@@ -23,8 +17,6 @@
                 </video>
               </form>
             {% endfor %}
-            
-              <!-- <video id="vid2" controls></video> -->
         </div>
         <div class="card-footer text-muted">
           <div class="container">
@@ -43,26 +35,6 @@
           </div>
         </div>
     </div>
-
-
-      <!-- <form>
-        <button type="button" class="btn btn-dark" style="margin-right: 50px;"><i class="fa fa-reply-all"></i>Make another Video</button>
-      </form>
-      <form>
-        <a type="button" class="btn btn-danger" style="margin-left: 50px;">Send Video</a>
-      </form>   -->
-
-
-      <!-- <form method="POST" action="">
-        <button name="btnBackChooseOtherUser" type="submit" class="btn btn-dark" style="height: 50px;width: 22rem ;font-size: 30px;"><i class="fa fa-reply-all"></i>Back</button>
-      </form> 
-    </div>
-    <div class="col" >
-      <form method="POST" action="">
-        <button name="btnSendMessage" type="submit" class="btn btn-danger" style="height: 50px; width: 300px;font-size: 30px;">Send Message</button>
-      </form>    -->
-
-
 
 
 {% endblock content %}

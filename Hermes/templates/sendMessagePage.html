@@ -2,11 +2,14 @@
 {% block content %}
 
 
-<script src="{{url_for('static', filename='js/recordVideo.js')}}"></script>
-<div id="fade"></div>
+
+<div id="fade">
 <div id="modal" class="spinner-border" role="status">
     <span class="sr-only">Loading...</span>
 </div>
+  <h5 style="color: white;" class="textModal">Sending Message</h5>
+</div>
+
 
 {% for r in receiver %}
     <div  class="card text-center">
@@ -27,7 +30,7 @@
             </div>
             <div class="col" >
               <form method="POST" action="">
-                <button id="btnMsg" name="btnSendMessage" type="submit" class="btn btn-danger" style="height: 50px; width: 300px;font-size: 30px;">Send Message</button>
+                <button id="malaka" name="btnSendMessage" type="submit" class="btn btn-danger" style="height: 50px; width: 300px;font-size: 30px;">Send Message</button>
               </form>   
             </div>
           </div>
@@ -37,12 +40,14 @@
 
 {% endfor %}
 
-
-     
-
-
-
-
-
+<script>
+  function openModal2() {
+    document.getElementById('modal').style.display = 'block';
+    document.getElementById('fade').style.display = 'block';
+  }
+  let s = document.getElementById('malaka');
+  s.addEventListener("click", openModal2)
+  console.log(s);
+</script>
 
 {% endblock content %}
