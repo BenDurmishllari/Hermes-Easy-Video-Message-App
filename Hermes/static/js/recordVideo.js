@@ -137,7 +137,7 @@ navigator.mediaDevices.getUserMedia(constraintObj)
         var formData = new FormData();
         formData.append('video', blob);
         
-        // Execute the ajax request, in this case we have a very simple PHP script
+        // Execute the ajax request, in this case we have a very simple JS script
         // that accepts and save the uploaded "video" file
         xhr('/recordVideo', formData, function (fName)
         {
